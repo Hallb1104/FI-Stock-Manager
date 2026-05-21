@@ -3,9 +3,11 @@
     "name": "FI Stock Manager",
     "slug": "fi-stock-manager",
     "version": "1.0.0",
+    "sdkVersion": "51.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
+      "image": "./assets/splash.png",
       "backgroundColor": "#111418"
     },
     "ios": {
@@ -15,9 +17,22 @@
     "android": {
       "package": "com.formimagination.stockmanager",
       "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#111418"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow FI Stock Manager to access the camera for barcode scanning."
+        }
+      ]
+    ],
     "extra": {
       "eas": {
         "projectId": "1eaa7cbc-1381-4e90-9237-28a63bf5aa81"
