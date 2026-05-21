@@ -1,0 +1,18 @@
+{
+  "name": "fi-stock-manager",
+  "version": "1.0.0",
+  "main": "App.js",
+  "scripts": {
+    "start": "expo start"
+  },
+  "dependencies": {
+    "expo": "~52.0.0",
+    "expo-camera": "~16.0.18",
+    "expo-status-bar": "~2.0.0",
+    "react": "18.3.2",
+    "react-native": "0.76.5"
+  },
+  "devDependencies": {
+    "babel-preset-expo": "~12.0.0"
+  }
+}
