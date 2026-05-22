@@ -1,0 +1,11 @@
+{
+  "name": "FI Stock Manager",
+  "short_name": "FI Stock",
+  "start_url": "/FI-Stock-Manager/fi-stock-web.html",
+  "display": "standalone",
+  "background_color": "#0e1114",
+  "theme_color": "#0e1114",
+  "icons": [
+    { "src": "icon.png", "sizes": "1024x1024", "type": "image/png" }
+  ]
+}

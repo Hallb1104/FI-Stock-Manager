@@ -1,763 +1,718 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>FI Stock Manager — Form Imagination</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<title>FI Stock Manager</title>
 <style>
-  /* ── Reset & tokens ─────────────────────────────── */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --teal:       #00A89D;
-    --teal-dark:  #007f77;
-    --teal-light: #e6f7f6;
-    --dark:       #111418;
-    --dark-2:     #1c2128;
-    --dark-3:     #252b33;
-    --dark-4:     #2e3641;
-    --off-white:  #f4f5f3;
-    --mid:        #8a9199;
-    --border:     #2e3641;
-    --border-l:   #e2e4e0;
-    --ok:         #00A89D;
-    --ok-bg:      #0a2825;
-    --low:        #d97706;
-    --low-bg:     #2a1f05;
-    --out:        #dc2626;
-    --out-bg:     #280808;
-    --font-head:  'Syne', sans-serif;
-    --font-body:  'DM Sans', sans-serif;
-    --font-mono:  'DM Mono', monospace;
-    --radius:     10px;
-    --sidebar-w:  220px;
-  }
-
-  body {
-    font-family: var(--font-body);
-    background: var(--dark);
-    color: #d8dce0;
-    min-height: 100vh;
-    display: flex;
-    font-size: 14px;
-    line-height: 1.5;
-  }
-
-  /* ── Sidebar ─────────────────────────────────────── */
-  #sidebar {
-    width: var(--sidebar-w);
-    background: var(--dark-2);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0; left: 0; bottom: 0;
-    z-index: 100;
-  }
-
-  .sidebar-logo {
-    padding: 20px 18px 16px;
-    border-bottom: 1px solid var(--border);
-  }
-  .logo-mark {
-    width: 36px; height: 36px;
-    background: var(--teal);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-head);
-    font-size: 16px; font-weight: 800;
-    color: #fff;
-    margin-bottom: 10px;
-  }
-  .logo-name {
-    font-family: var(--font-head);
-    font-size: 11px; font-weight: 800;
-    color: #fff;
-    letter-spacing: 1px;
-    line-height: 1.2;
-  }
-  .logo-sub {
-    font-size: 9px;
-    color: var(--teal);
-    letter-spacing: 2.5px;
-    font-weight: 600;
-    margin-top: 2px;
-  }
-
-  .nav-section {
-    padding: 12px 10px;
-    flex: 1;
-  }
-  .nav-label {
-    font-size: 9px;
-    color: var(--mid);
-    letter-spacing: 2px;
-    font-weight: 600;
-    padding: 0 8px;
-    margin-bottom: 4px;
-    margin-top: 10px;
-  }
-  .nav-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    padding: 9px 10px;
-    border: none;
-    background: none;
-    color: var(--mid);
-    font-family: var(--font-body);
-    font-size: 13px;
-    font-weight: 600;
-    border-radius: 8px;
-    cursor: pointer;
-    text-align: left;
-    transition: background 0.15s, color 0.15s;
-    margin-bottom: 2px;
-  }
-  .nav-btn:hover { background: var(--dark-3); color: #d8dce0; }
-  .nav-btn.active { background: var(--dark-3); color: #fff; }
-  .nav-btn.active .nav-icon { color: var(--teal); }
-  .nav-icon { font-size: 15px; width: 18px; text-align: center; }
-
-  .alert-pill {
-    margin-left: auto;
-    background: var(--low-bg);
-    color: var(--low);
-    border-radius: 20px;
-    padding: 1px 7px;
-    font-size: 11px;
-    font-weight: 700;
-  }
-
-  .sidebar-footer {
-    padding: 14px 18px;
-    border-top: 1px solid var(--border);
-    font-size: 11px;
-    color: var(--mid);
-  }
-  .sidebar-footer a { color: var(--teal); text-decoration: none; }
-
-  /* ── Main content ────────────────────────────────── */
-  #main {
-    margin-left: var(--sidebar-w);
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-
-  /* Top bar */
-  #topbar {
-    background: var(--dark-2);
-    border-bottom: 1px solid var(--border);
-    padding: 0 28px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    position: sticky;
-    top: 0;
-    z-index: 50;
-  }
-  #topbar h1 {
-    font-family: var(--font-head);
-    font-size: 15px;
-    font-weight: 700;
-    color: #fff;
-    flex: 1;
-  }
-
-  .sync-dot {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 11px; color: var(--mid); font-weight: 600;
-    transition: color 0.3s;
-  }
-  .sync-dot-circle {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--mid); transition: background 0.3s;
-  }
-  .sync-dot.saving .sync-dot-circle { background: var(--teal); animation: pulse 0.8s infinite; }
-  .sync-dot.saved  .sync-dot-circle { background: #22c55e; }
-  .sync-dot.saved  { color: #22c55e; }
-  @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.3 } }
-
-  /* ── Page content ────────────────────────────────── */
-  .page { display: none; padding: 28px; max-width: 1100px; }
-  .page.active { display: block; }
-
-  .page-title {
-    font-family: var(--font-head);
-    font-size: 22px;
-    font-weight: 800;
-    color: #fff;
-    margin-bottom: 24px;
-    letter-spacing: -0.3px;
-  }
-
-  /* ── Cards / panels ──────────────────────────────── */
-  .panel {
-    background: var(--dark-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-  .panel-header {
-    padding: 14px 18px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .panel-title {
-    font-family: var(--font-head);
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--mid);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    flex: 1;
-  }
-
-  /* ── Summary cards ───────────────────────────────── */
-  .summary-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-  .summary-card {
-    background: var(--dark-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 18px;
-  }
-  .summary-card.warn {
-    background: var(--low-bg);
-    border-color: #d9770644;
-  }
-  .summary-icon { font-size: 20px; margin-bottom: 8px; }
-  .summary-val {
-    font-family: var(--font-head);
-    font-size: 26px;
-    font-weight: 800;
-    color: #fff;
-    line-height: 1;
-  }
-  .summary-card.warn .summary-val { color: var(--low); }
-  .summary-label { font-size: 11px; color: var(--mid); margin-top: 4px; }
-
-  /* ── Controls row ────────────────────────────────── */
-  .controls {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 16px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  input[type="text"], input[type="number"], select, textarea {
-    background: var(--dark-3);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: #d8dce0;
-    font-family: var(--font-body);
-    font-size: 13px;
-    padding: 9px 12px;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  input:focus, select:focus, textarea:focus { border-color: var(--teal); }
-  input::placeholder, textarea::placeholder { color: var(--mid); }
-  select option { background: var(--dark-3); }
-
-  .search-box { flex: 1; min-width: 200px; }
-
-  .filter-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
-  .chip {
-    padding: 5px 12px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: var(--dark-3);
-    color: var(--mid);
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .chip:hover { border-color: var(--teal); color: var(--teal); }
-  .chip.active { background: var(--teal); border-color: var(--teal); color: #fff; }
-
-  /* ── Buttons ─────────────────────────────────────── */
-  .btn {
-    padding: 9px 16px;
-    border-radius: 8px;
-    border: none;
-    font-family: var(--font-body);
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: opacity 0.15s, background 0.15s;
-    white-space: nowrap;
-  }
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .btn-primary { background: var(--teal); color: #fff; }
-  .btn-primary:hover:not(:disabled) { background: var(--teal-dark); }
-  .btn-ghost { background: var(--dark-3); color: #d8dce0; border: 1px solid var(--border); }
-  .btn-ghost:hover { background: var(--dark-4); }
-  .btn-danger { background: none; color: var(--out); border: 1px solid #dc262644; }
-  .btn-danger:hover { background: var(--out-bg); }
-  .btn-sm { padding: 5px 10px; font-size: 12px; }
-
-  /* ── Table ───────────────────────────────────────── */
-  table { width: 100%; border-collapse: collapse; }
-  thead tr { border-bottom: 1px solid var(--border); }
-  th {
-    padding: 10px 14px;
-    text-align: left;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--mid);
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-  td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-  tbody tr:last-child td { border-bottom: none; }
-  tbody tr:hover { background: var(--dark-3); }
-
-  .sku-tag {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--mid);
-    background: var(--dark-3);
-    padding: 2px 6px;
-    border-radius: 4px;
-  }
-  .cat-tag {
-    font-size: 11px;
-    color: var(--mid);
-    background: var(--dark-4);
-    padding: 2px 8px;
-    border-radius: 20px;
-  }
-
-  /* Status badges */
-  .badge {
-    display: inline-block;
-    padding: 3px 9px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 700;
-    white-space: nowrap;
-  }
-  .badge-ok  { background: var(--ok-bg);  color: var(--ok); }
-  .badge-low { background: var(--low-bg); color: var(--low); }
-  .badge-out { background: var(--out-bg); color: var(--out); }
-  .badge-in  { background: var(--ok-bg);  color: var(--ok); }
-  .badge-out-move { background: var(--out-bg); color: var(--out); }
-
-  /* left border stripe on table rows */
-  .stripe-ok  { border-left: 3px solid var(--ok)  !important; }
-  .stripe-low { border-left: 3px solid var(--low) !important; }
-  .stripe-out { border-left: 3px solid var(--out) !important; }
-
-  /* ── Alert banner ────────────────────────────────── */
-  .alert-banner {
-    background: var(--low-bg);
-    border: 1px solid #d9770633;
-    border-radius: var(--radius);
-    padding: 14px 18px;
-    margin-bottom: 16px;
-  }
-  .alert-banner-title {
-    font-weight: 700;
-    color: var(--low);
-    font-size: 12px;
-    margin-bottom: 10px;
-    letter-spacing: 0.5px;
-  }
-  .alert-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 6px 0;
-    border-bottom: 1px solid #d9770622;
-  }
-  .alert-item:last-child { border-bottom: none; }
-
-  /* ── Modal ───────────────────────────────────────── */
-  .modal-backdrop {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-  }
-  .modal-backdrop.open { display: flex; }
-  .modal {
-    background: var(--dark-2);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    width: 480px;
-    max-width: 95vw;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
-    animation: slideUp 0.2s ease;
-  }
-  @keyframes slideUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: translateY(0); } }
-  .modal-header {
-    padding: 20px 24px 16px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .modal-title {
-    font-family: var(--font-head);
-    font-size: 17px;
-    font-weight: 800;
-    color: #fff;
-  }
-  .modal-close {
-    background: none; border: none;
-    color: var(--mid); font-size: 18px;
-    cursor: pointer; line-height: 1;
-    padding: 2px 6px; border-radius: 4px;
-  }
-  .modal-close:hover { color: #fff; background: var(--dark-4); }
-  .modal-body { padding: 20px 24px 24px; }
-
-  .field { margin-bottom: 16px; }
-  .field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--mid);
-    margin-bottom: 6px;
-    letter-spacing: 0.3px;
-  }
-  .field input, .field select, .field textarea {
-    width: 100%;
-  }
-  .field-hint { font-size: 11px; color: var(--mid); margin-top: 4px; }
-
-  .dir-toggle { display: flex; gap: 8px; }
-  .dir-btn {
-    flex: 1; padding: 11px;
-    border: 2px solid var(--border);
-    border-radius: 8px;
-    background: none;
-    color: var(--mid);
-    font-family: var(--font-body);
-    font-size: 14px;
-    font-weight: 800;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .dir-btn.active-in  { border-color: var(--teal); background: var(--ok-bg); color: var(--teal); }
-  .dir-btn.active-out { border-color: var(--out);  background: var(--out-bg); color: var(--out); }
-
-  /* ── Activity search result chip ─────────────────── */
-  .ref-chip {
-    display: inline-block;
-    background: var(--ok-bg);
-    color: var(--teal-dark);
-    border-radius: 5px;
-    padding: 1px 7px;
-    font-size: 11px;
-    font-weight: 700;
-    margin-right: 6px;
-    font-family: var(--font-mono);
-  }
-  .note-match { color: var(--teal); font-weight: 600; }
-
-  /* ── Bar chart ───────────────────────────────────── */
-  .bar-row { margin-bottom: 14px; }
-  .bar-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
-  .bar-track { height: 6px; background: var(--dark-4); border-radius: 99px; overflow: hidden; }
-  .bar-fill  { height: 6px; background: var(--teal); border-radius: 99px; transition: width 0.4s ease; }
-
-  /* ── Dept list in settings ───────────────────────── */
-  .dept-row {
-    display: flex;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border);
-    gap: 12px;
-  }
-  .dept-row:last-child { border-bottom: none; }
-  .dept-name { flex: 1; font-weight: 600; color: #fff; font-size: 14px; }
-  .dept-count { font-size: 12px; color: var(--mid); }
-
-  /* ── Toast ───────────────────────────────────────── */
-  #toast {
-    position: fixed;
-    bottom: 28px; left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--dark-4);
-    border: 1px solid var(--border);
-    color: #fff;
-    padding: 10px 22px;
-    border-radius: 30px;
-    font-weight: 700;
-    font-size: 13px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-    transition: transform 0.3s ease;
-    z-index: 999;
-    white-space: nowrap;
-  }
-  #toast.show { transform: translateX(-50%) translateY(0); }
-
-  /* ── Empty state ─────────────────────────────────── */
-  .empty {
-    text-align: center;
-    padding: 48px 24px;
-    color: var(--mid);
-  }
-  .empty-icon { font-size: 32px; margin-bottom: 10px; }
-
-  /* ── Loading ─────────────────────────────────────── */
-  #loading-screen {
-    position: fixed; inset: 0;
-    background: var(--dark);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    z-index: 999;
-    gap: 10px;
-  }
-  .spinner {
-    width: 28px; height: 28px;
-    border: 3px solid var(--border);
-    border-top-color: var(--teal);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── Responsive ──────────────────────────────────── */
-  @media (max-width: 900px) {
-    .summary-grid { grid-template-columns: 1fr 1fr; }
-  }
-  @media (max-width: 640px) {
-    :root { --sidebar-w: 0px; }
-    #sidebar { display: none; }
-    #main { margin-left: 0; }
-  }
+/* System font stack — zero network requests, loads instantly */
+:root {
+  --font-head: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-body: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'SF Mono', 'Consolas', 'Menlo', monospace;
+}
 </style>
+<style>
+/* ── Reset & Variables ─────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --teal:     #00A89D;
+  --teal-dim: #00A89D22;
+  --teal-mid: #00A89D55;
+  --dark:     #0e1114;
+  --dark-2:   #161b21;
+  --dark-3:   #1e252d;
+  --dark-4:   #252e38;
+  --border:   #ffffff0f;
+  --border-2: #ffffff18;
+  --mid:      #6b7785;
+  --text:     #e2e8f0;
+  --ok:       #00A89D;
+  --low:      #e07b00;
+  --out:      #e03444;
+  --font-head: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-body: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'SF Mono', 'Consolas', 'Menlo', monospace;
+  --sidebar-w: 220px;
+  --topbar-h:  56px;
+  --bottomnav-h: 64px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+html, body { height: 100%; background: var(--dark); color: var(--text); font-family: var(--font-body); font-size: 14px; overflow: hidden; }
+
+/* ── Layout ────────────────────────────────────────────── */
+#app { display: flex; height: 100dvh; }
+
+/* Sidebar (desktop) */
+#sidebar {
+  width: var(--sidebar-w);
+  background: var(--dark-2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.sidebar-logo {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.logo-mark {
+  width: 36px; height: 36px;
+  background: var(--teal);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-head);
+  font-size: 16px; font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+}
+.logo-name { font-family: var(--font-head); font-size: 13px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+.logo-sub  { font-size: 10px; color: var(--mid); letter-spacing: 1px; text-transform: uppercase; margin-top: 1px; }
+
+.sidebar-nav { flex: 1; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; }
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px; font-weight: 500;
+  color: var(--mid);
+  transition: all .15s;
+  border: none; background: none; width: 100%; text-align: left;
+  position: relative;
+}
+.nav-item:hover { background: var(--dark-3); color: var(--text); }
+.nav-item.active { background: var(--teal-dim); color: var(--teal); }
+.nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+.nav-badge {
+  margin-left: auto;
+  background: var(--out);
+  color: #fff;
+  font-size: 10px; font-weight: 700;
+  border-radius: 99px;
+  padding: 1px 6px;
+  display: none;
+}
+
+.sidebar-footer {
+  padding: 14px 16px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mid); transition: background .3s; flex-shrink: 0; }
+.sync-dot.saving { background: var(--low); animation: pulse 1s infinite; }
+.sync-dot.saved  { background: var(--ok); }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+#sync-label { font-size: 11px; color: var(--mid); }
+
+/* Main content area */
+#main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+
+/* Topbar */
+#topbar {
+  height: var(--topbar-h);
+  background: var(--dark-2);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 16px;
+  flex-shrink: 0;
+  z-index: 5;
+}
+#topbar-title { font-family: var(--font-head); font-size: 18px; font-weight: 800; color: #fff; flex: 1; }
+.topbar-actions { display: flex; gap: 8px; align-items: center; }
+
+/* Pages */
+#pages { flex: 1; overflow: hidden; position: relative; }
+.page { position: absolute; inset: 0; overflow-y: auto; display: none; padding: 20px; }
+.page.active { display: block; }
+
+/* Bottom nav (mobile) */
+#bottomnav {
+  display: none;
+  background: var(--dark-2);
+  border-top: 1px solid var(--border);
+  padding-bottom: var(--safe-bottom);
+  z-index: 10;
+  flex-shrink: 0;
+}
+.bnav-inner { display: flex; height: var(--bottomnav-h); }
+.bnav-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px; cursor: pointer; border: none; background: none;
+  color: var(--mid); font-size: 10px; font-weight: 600;
+  letter-spacing: 0.3px; text-transform: uppercase;
+  transition: color .15s; position: relative;
+}
+.bnav-item .bnav-icon { font-size: 20px; }
+.bnav-item.active { color: var(--teal); }
+.bnav-item.active::before {
+  content: '';
+  position: absolute; top: 0; left: 20%; right: 20%;
+  height: 2px; background: var(--teal); border-radius: 0 0 2px 2px;
+}
+.bnav-badge {
+  position: absolute; top: 6px; right: calc(50% - 18px);
+  background: var(--out); color: #fff;
+  font-size: 9px; font-weight: 800;
+  border-radius: 99px; padding: 0 4px; min-width: 14px; text-align: center;
+  display: none;
+}
+
+/* ── Loading screen ─────────────────────────────────────── */
+#loading-screen {
+  position: fixed; inset: 0; background: var(--dark);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 9999; gap: 16px;
+}
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid var(--dark-3);
+  border-top-color: var(--teal);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Buttons ────────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  border: none; border-radius: 8px; cursor: pointer;
+  font-family: var(--font-body); font-weight: 600; font-size: 13px;
+  transition: all .15s; white-space: nowrap; padding: 9px 16px;
+}
+.btn-primary  { background: var(--teal); color: #fff; }
+.btn-primary:hover { background: #009990; }
+.btn-ghost    { background: transparent; border: 1px solid var(--border-2); color: var(--text); }
+.btn-ghost:hover { background: var(--dark-3); }
+.btn-danger   { background: #e0344422; border: 1px solid #e0344433; color: var(--out); }
+.btn-danger:hover { background: #e0344433; }
+.btn-sm       { padding: 5px 10px; font-size: 12px; border-radius: 6px; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* Big action button (mobile adjust) */
+.big-btn {
+  width: 60px; height: 60px; border-radius: 50%;
+  border: none; cursor: pointer;
+  font-size: 28px; font-weight: 300; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .1s, box-shadow .1s;
+  -webkit-tap-highlight-color: transparent;
+}
+.big-btn:active { transform: scale(.93); }
+.big-btn-minus { background: #e0344420; color: var(--out); box-shadow: 0 0 0 1px #e0344430; }
+.big-btn-plus  { background: #00A89D20; color: var(--teal); box-shadow: 0 0 0 1px #00A89D30; }
+
+/* ── Cards / Summary ───────────────────────────────────── */
+.summary-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 20px; }
+.summary-card {
+  background: var(--dark-2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px;
+}
+.summary-card.warn { border-color: var(--low); background: #e07b0010; }
+.summary-icon { font-size: 18px; margin-bottom: 8px; }
+.summary-val  { font-family: var(--font-head); font-size: 22px; font-weight: 800; color: #fff; }
+.summary-label{ font-size: 11px; color: var(--mid); margin-top: 2px; text-transform: uppercase; letter-spacing: .5px; }
+
+/* ── Alert banner ───────────────────────────────────────── */
+.alert-banner {
+  background: #e07b0012; border: 1px solid #e07b0035;
+  border-radius: 12px; padding: 14px 16px; margin-bottom: 16px;
+}
+.alert-banner-title { font-weight: 700; color: var(--low); font-size: 13px; margin-bottom: 10px; }
+.alert-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 7px 0; border-bottom: 1px solid var(--border);
+}
+.alert-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+/* ── Search bar ────────────────────────────────────────── */
+.search-wrap { position: relative; flex: 1; }
+.search-wrap input {
+  width: 100%; background: var(--dark-3); border: 1px solid var(--border-2);
+  border-radius: 8px; padding: 9px 12px 9px 36px;
+  color: var(--text); font-family: var(--font-body); font-size: 13px;
+  outline: none;
+}
+.search-wrap input:focus { border-color: var(--teal-mid); }
+.search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--mid); font-size: 14px; pointer-events: none; }
+.search-wrap input::placeholder { color: var(--mid); }
+
+/* ── Filter chips ──────────────────────────────────────── */
+.chips-wrap { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 14px; scrollbar-width: none; }
+.chips-wrap::-webkit-scrollbar { display: none; }
+.chip {
+  flex-shrink: 0; padding: 5px 12px; border-radius: 99px;
+  border: 1px solid var(--border-2); background: transparent;
+  color: var(--mid); font-size: 12px; font-weight: 600; cursor: pointer;
+  font-family: var(--font-body); transition: all .15s;
+  white-space: nowrap;
+}
+.chip:hover { border-color: var(--teal-mid); color: var(--text); }
+.chip.active { background: var(--teal-dim); border-color: var(--teal-mid); color: var(--teal); }
+
+/* ── Table ─────────────────────────────────────────────── */
+.table-wrap { background: var(--dark-2); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+th {
+  text-align: left; padding: 11px 14px;
+  font-size: 11px; font-weight: 600; color: var(--mid);
+  letter-spacing: .5px; text-transform: uppercase;
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--dark-3); }
+
+/* ── Mobile item cards ─────────────────────────────────── */
+.item-cards { display: none; flex-direction: column; gap: 8px; }
+.item-card {
+  background: var(--dark-2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer; transition: border-color .15s;
+}
+.item-card:active { border-color: var(--teal-mid); }
+.item-card-status { width: 6px; align-self: stretch; border-radius: 3px; flex-shrink: 0; }
+.item-card-body { flex: 1; min-width: 0; }
+.item-card-name { font-weight: 600; color: #fff; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item-card-meta { font-size: 11px; color: var(--mid); margin-top: 2px; }
+.item-card-qty  { font-family: var(--font-head); font-size: 20px; font-weight: 800; text-align: right; flex-shrink: 0; }
+.item-card-unit { font-size: 10px; color: var(--mid); text-align: right; }
+
+/* ── Badges / Tags ─────────────────────────────────────── */
+.badge { display: inline-block; padding: 3px 8px; border-radius: 99px; font-size: 11px; font-weight: 700; }
+.badge-ok  { background: #00A89D20; color: var(--ok); }
+.badge-low { background: #e07b0020; color: var(--low); }
+.badge-out { background: #e0344420; color: var(--out); }
+.badge-in  { background: #00A89D20; color: var(--ok); }
+.badge-out-move { background: #e0344420; color: var(--out); }
+.sku-tag { font-family: var(--font-mono); font-size: 11px; color: var(--mid); background: var(--dark-3); padding: 2px 6px; border-radius: 4px; }
+.cat-tag { font-size: 11px; color: var(--teal); background: var(--teal-dim); padding: 2px 8px; border-radius: 99px; white-space: nowrap; }
+.ref-chip { font-family: var(--font-mono); font-size: 11px; background: var(--dark-4); border: 1px solid var(--border-2); color: var(--text); padding: 2px 7px; border-radius: 4px; margin-right: 6px; }
+
+/* ── Toolbar row ───────────────────────────────────────── */
+.toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; flex-wrap: wrap; }
+
+/* ── Section header ─────────────────────────────────────── */
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.section-title { font-family: var(--font-head); font-size: 16px; font-weight: 800; color: #fff; }
+
+/* ── Reports bars ───────────────────────────────────────── */
+.bar-row { margin-bottom: 14px; }
+.bar-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
+.bar-track { background: var(--dark-3); border-radius: 99px; height: 6px; overflow: hidden; }
+.bar-fill  { height: 6px; background: var(--teal); border-radius: 99px; transition: width .8s cubic-bezier(.4,0,.2,1); }
+
+/* ── Health donut (simple) ──────────────────────────────── */
+.health-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+.health-card { background: var(--dark-3); border-radius: 10px; padding: 14px; text-align: center; }
+.health-num  { font-family: var(--font-head); font-size: 26px; font-weight: 800; }
+.health-lbl  { font-size: 11px; color: var(--mid); margin-top: 3px; text-transform: uppercase; letter-spacing: .4px; }
+
+/* ── Categories settings ────────────────────────────────── */
+.cat-list { display: flex; flex-direction: column; gap: 6px; }
+.cat-row {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--dark-3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 14px;
+}
+.cat-row-name { font-weight: 600; color: #fff; font-size: 13px; }
+.cat-row-count { font-size: 11px; color: var(--mid); }
+
+/* ── Modals ─────────────────────────────────────────────── */
+.modal-backdrop {
+  position: fixed; inset: 0; background: #00000088;
+  display: flex; align-items: flex-end; justify-content: center;
+  z-index: 1000; opacity: 0; pointer-events: none;
+  transition: opacity .2s;
+  backdrop-filter: blur(4px);
+}
+.modal-backdrop.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--dark-2); border: 1px solid var(--border-2);
+  border-radius: 20px 20px 0 0;
+  width: 100%; max-width: 520px;
+  max-height: 92dvh; overflow-y: auto;
+  transform: translateY(40px);
+  transition: transform .25s cubic-bezier(.4,0,.2,1);
+  padding-bottom: var(--safe-bottom);
+}
+.modal-backdrop.open .modal { transform: translateY(0); }
+.modal-handle { width: 36px; height: 4px; background: var(--dark-4); border-radius: 2px; margin: 12px auto 0; }
+.modal-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 12px; border-bottom: 1px solid var(--border); }
+.modal-title  { font-family: var(--font-head); font-size: 18px; font-weight: 800; color: #fff; }
+.modal-close  { background: var(--dark-3); border: none; color: var(--mid); width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+.modal-body   { padding: 16px 20px 20px; }
+
+/* ── Form fields ────────────────────────────────────────── */
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 11px; font-weight: 600; color: var(--mid); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+.field input, .field select, .field textarea {
+  width: 100%; background: var(--dark-3); border: 1px solid var(--border-2);
+  border-radius: 8px; padding: 10px 12px;
+  color: var(--text); font-family: var(--font-body); font-size: 14px;
+  outline: none; transition: border-color .15s;
+}
+.field input:focus, .field select:focus { border-color: var(--teal-mid); }
+.field select option { background: var(--dark-3); }
+
+/* ── Adjust modal (mobile-first big UI) ─────────────────── */
+.adj-item-name { font-family: var(--font-head); font-size: 18px; font-weight: 800; color: #fff; text-align: center; margin-bottom: 4px; }
+.adj-item-sku  { font-family: var(--font-mono); font-size: 12px; color: var(--mid); text-align: center; margin-bottom: 20px; }
+.adj-dir-tabs  { display: flex; background: var(--dark-3); border-radius: 10px; padding: 3px; margin-bottom: 20px; }
+.adj-tab {
+  flex: 1; padding: 9px; border-radius: 8px; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: 13px; font-weight: 700;
+  background: transparent; color: var(--mid); transition: all .15s;
+}
+.adj-tab.active-in  { background: var(--teal-dim); color: var(--teal); }
+.adj-tab.active-out { background: #e0344420; color: var(--out); }
+
+.qty-stepper { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 16px 0 24px; }
+.qty-display {
+  font-family: var(--font-head); font-size: 56px; font-weight: 800;
+  color: #fff; min-width: 80px; text-align: center; line-height: 1;
+}
+
+/* ── Toast ───────────────────────────────────────────────── */
+#toast {
+  position: fixed; bottom: calc(var(--bottomnav-h) + 12px + var(--safe-bottom));
+  left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--dark-4); border: 1px solid var(--border-2);
+  color: #fff; padding: 10px 20px; border-radius: 99px;
+  font-size: 13px; font-weight: 600; white-space: nowrap;
+  opacity: 0; transition: all .25s; z-index: 2000; pointer-events: none;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── Empty state ─────────────────────────────────────────── */
+.empty { text-align: center; padding: 48px 20px; color: var(--mid); }
+.empty-icon { font-size: 36px; margin-bottom: 12px; opacity: .5; }
+.empty p    { font-size: 13px; line-height: 1.6; }
+
+/* ── Scan button (mobile) ────────────────────────────────── */
+#scan-fab {
+  position: fixed; right: 16px;
+  bottom: calc(var(--bottomnav-h) + 16px + var(--safe-bottom));
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--teal); border: none; cursor: pointer;
+  font-size: 22px; color: #fff;
+  box-shadow: 0 4px 20px #00A89D55;
+  display: none; align-items: center; justify-content: center;
+  z-index: 100; transition: transform .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+#scan-fab:active { transform: scale(.92); }
+
+/* Scanner overlay */
+#scanner-overlay {
+  position: fixed; inset: 0; background: #000;
+  z-index: 2000; display: none; flex-direction: column;
+}
+#scanner-video { width: 100%; height: 100%; object-fit: cover; }
+.scanner-ui {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.scanner-frame {
+  width: 240px; height: 240px;
+  border: 2px solid var(--teal);
+  border-radius: 16px;
+  box-shadow: 0 0 0 9999px #00000088;
+}
+.scanner-label { color: #fff; font-size: 14px; font-weight: 600; margin-top: 20px; }
+.scanner-close {
+  position: absolute; top: calc(16px + env(safe-area-inset-top, 0px)); right: 16px;
+  background: #ffffff22; border: none; color: #fff;
+  width: 40px; height: 40px; border-radius: 50%; font-size: 18px;
+  cursor: pointer; pointer-events: all;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* note-match highlight */
+.note-match { color: var(--teal); font-weight: 700; }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  #sidebar     { display: none; }
+  #bottomnav   { display: flex; flex-direction: column; }
+  #scan-fab    { display: flex; }
+  .page        { padding: 14px 14px 8px; }
+  .summary-grid { grid-template-columns: repeat(2,1fr); gap: 8px; margin-bottom: 14px; }
+  .summary-val  { font-size: 18px; }
+  .table-wrap   { display: none; }
+  .item-cards   { display: flex; }
+  #topbar       { padding: 0 14px; }
+  #topbar-title { font-size: 16px; }
+}
+@media (min-width: 769px) {
+  .modal { border-radius: 16px; margin: auto; }
+  .modal-backdrop { align-items: center; }
+  #toast { bottom: 20px; }
+}
+@media (min-width: 1100px) {
+  --sidebar-w: 240px;
+  .summary-grid { grid-template-columns: repeat(4,1fr); }
+}
+</style>
+<meta name="theme-color" content="#0e1114"/>
+<link rel="manifest" href="manifest.json"/>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+</script>
 </head>
 <body>
 
 <!-- Loading -->
 <div id="loading-screen">
-  <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:900;color:#00A89D;">FI</div>
-  <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#fff;letter-spacing:1px;">FORM IMAGINATION</div>
-  <div style="font-size:9px;color:#00A89D;letter-spacing:3px;font-weight:600;margin-top:2px;">STOCK MANAGER</div>
-  <div class="spinner" style="margin-top:20px;"></div>
-  <div style="font-size:12px;color:#8a9199;margin-top:8px;">Connecting to database…</div>
+  <div class="logo-mark" style="width:52px;height:52px;font-size:22px;border-radius:12px;margin-bottom:0;">FI</div>
+  <div class="spinner"></div>
+  <div style="font-size:13px;color:var(--mid);">Loading stock data…</div>
 </div>
 
-<!-- Sidebar -->
-<nav id="sidebar">
-  <div class="sidebar-logo">
-    <div class="logo-mark">FI</div>
-    <div class="logo-name">FORM IMAGINATION</div>
-    <div class="logo-sub">STOCK MANAGER</div>
-  </div>
-  <div class="nav-section">
-    <div class="nav-label">Workspace</div>
-    <button class="nav-btn active" onclick="showTab('inventory')">
-      <span class="nav-icon">📦</span> Inventory
-      <span class="alert-pill" id="nav-alert-count" style="display:none"></span>
-    </button>
-    <button class="nav-btn" onclick="showTab('activity')">
-      <span class="nav-icon">↕</span> Activity
-    </button>
-    <button class="nav-btn" onclick="showTab('reports')">
-      <span class="nav-icon">📊</span> Reports
-    </button>
-    <div class="nav-label">Configuration</div>
-    <button class="nav-btn" onclick="showTab('settings')">
-      <span class="nav-icon">⚙</span> Categories
-    </button>
-  </div>
-  <div class="sidebar-footer">
-    <a href="https://formimagination.com" target="_blank">formimagination.com</a>
-  </div>
-</nav>
-
-<!-- Main -->
-<div id="main">
-  <!-- Topbar -->
-  <div id="topbar">
-    <h1 id="topbar-title">Inventory</h1>
-    <div class="sync-dot" id="sync-indicator">
-      <div class="sync-dot-circle"></div>
+<div id="app">
+  <!-- Sidebar -->
+  <nav id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">FI</div>
+      <div class="logo-name">FORM IMAGINATION</div>
+      <div class="logo-sub">Stock Manager</div>
+    </div>
+    <div class="sidebar-nav">
+      <button class="nav-item active" onclick="showTab('inventory')">
+        <span class="icon">📦</span> Inventory
+        <span class="nav-badge" id="nav-alert-count"></span>
+      </button>
+      <button class="nav-item" onclick="showTab('activity')">
+        <span class="icon">📋</span> Activity Log
+      </button>
+      <button class="nav-item" onclick="showTab('reports')">
+        <span class="icon">📊</span> Reports
+      </button>
+      <button class="nav-item" onclick="showTab('settings')">
+        <span class="icon">🏷</span> Categories
+      </button>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sync-dot idle" id="sync-dot"></div>
       <span id="sync-label"></span>
+      <button class="btn btn-ghost btn-sm" onclick="loadData()" style="margin-left:auto;padding:4px 8px;font-size:11px;">↻</button>
     </div>
-    <button class="btn btn-ghost btn-sm" onclick="loadData()">↻ Refresh</button>
-    <button class="btn btn-primary" id="topbar-add-btn" onclick="openAddModal()">+ Add Item</button>
-  </div>
+  </nav>
 
-  <!-- INVENTORY PAGE -->
-  <div class="page active" id="page-inventory">
-    <div class="summary-grid" id="summary-grid"></div>
-    <div id="alert-banner"></div>
-    <div class="controls">
-      <input type="text" class="search-box" id="inv-search" placeholder="Search name or SKU…" oninput="renderInventory()" />
-      <select id="inv-status-filter" onchange="renderInventory()">
-        <option value="all">All Status</option>
-        <option value="ok">In Stock</option>
-        <option value="low">Low Stock</option>
-        <option value="out">Out of Stock</option>
-      </select>
-    </div>
-    <div class="filter-chips" id="dept-filter-chips"></div>
-    <div class="panel">
-      <table>
-        <thead>
-          <tr>
-            <th>SKU</th><th>Name</th><th>Category</th>
-            <th>Qty</th><th>Min</th><th>Unit Cost</th><th>Value</th>
-            <th>Status</th><th></th>
-          </tr>
-        </thead>
-        <tbody id="inv-table-body"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- ACTIVITY PAGE -->
-  <div class="page" id="page-activity">
-    <div class="controls" style="margin-bottom:8px;">
-      <input type="text" class="search-box" id="act-search"
-        placeholder="Search by item name, job number or PO…"
-        oninput="renderActivity()" />
-    </div>
-    <div id="act-result-count" style="font-size:12px;color:var(--mid);margin-bottom:14px;"></div>
-    <div class="panel">
-      <table>
-        <thead>
-          <tr><th>Date</th><th>Item</th><th>Move</th><th>Qty</th><th>Job / PO Reference</th></tr>
-        </thead>
-        <tbody id="act-table-body"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- REPORTS PAGE -->
-  <div class="page" id="page-reports">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
-      <div class="panel">
-        <div class="panel-header"><span class="panel-title">Value by Category</span></div>
-        <div style="padding:20px;" id="reports-dept"></div>
-      </div>
-      <div class="panel">
-        <div class="panel-header"><span class="panel-title">Stock Health</span></div>
-        <div style="padding:20px;" id="reports-health"></div>
-      </div>
-    </div>
-    <div class="panel" style="margin-top:20px;">
-      <div class="panel-header"><span class="panel-title">Recent Movements</span></div>
-      <table>
-        <thead><tr><th>Date</th><th>Item</th><th>Move</th><th>Qty</th><th>Reference</th></tr></thead>
-        <tbody id="reports-recent"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- SETTINGS PAGE -->
-  <div class="page" id="page-settings">
-    <div style="max-width:580px;">
-      <div class="panel" style="margin-bottom:20px;">
-        <div class="panel-header">
-          <span class="panel-title">Categories</span>
+  <!-- Main -->
+  <div id="main">
+    <!-- Topbar -->
+    <div id="topbar">
+      <div id="topbar-title">Inventory</div>
+      <div class="topbar-actions">
+        <div id="sync-status" style="display:flex;align-items:center;gap:6px;">
+          <div class="sync-dot" id="sync-dot-top"></div>
+          <span id="sync-label-top" style="font-size:11px;color:var(--mid);"></span>
         </div>
-        <div style="padding:18px 20px;">
-          <p style="font-size:12px;color:var(--mid);margin-bottom:16px;">
-            Categories are shared across all devices. Changes appear immediately for all users.
-          </p>
-          <div style="display:flex;gap:8px;margin-bottom:20px;">
-            <input type="text" id="new-dept-input" placeholder="New category name…"
-              style="flex:1;" onkeydown="if(event.key==='Enter')addDepartment()" />
-            <button class="btn btn-primary" onclick="addDepartment()">Add Category</button>
+        <button class="btn btn-primary btn-sm" id="topbar-add-btn" onclick="openModal('modal-add')">+ Add Item</button>
+      </div>
+    </div>
+
+    <!-- Pages -->
+    <div id="pages">
+
+      <!-- ── INVENTORY ── -->
+      <div class="page active" id="page-inventory">
+        <div class="summary-grid" id="summary-grid"></div>
+        <div id="alert-banner"></div>
+
+        <div class="toolbar">
+          <div class="search-wrap" style="flex:1;min-width:180px;">
+            <span class="search-icon">🔍</span>
+            <input type="search" id="inv-search" placeholder="Search items or SKU…" oninput="renderInventory()"/>
           </div>
-          <div id="dept-list"></div>
+          <select style="background:var(--dark-3);border:1px solid var(--border-2);border-radius:8px;padding:9px 12px;color:var(--text);font-family:var(--font-body);font-size:13px;outline:none;" id="inv-status-filter" onchange="renderInventory()">
+            <option value="all">All Status</option>
+            <option value="ok">In Stock</option>
+            <option value="low">Low Stock</option>
+            <option value="out">Out of Stock</option>
+          </select>
         </div>
-      </div>
 
-      <div class="panel">
-        <div class="panel-header"><span class="panel-title">About</span></div>
-        <div style="padding:4px 20px 8px;">
-          <table style="width:100%;">
-            <tbody id="about-table"></tbody>
+        <div class="chips-wrap" id="dept-filter-chips"></div>
+
+        <!-- Desktop table -->
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>SKU</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Qty</th>
+                <th>Min</th>
+                <th>Cost</th>
+                <th>Value</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="inv-table-body"></tbody>
           </table>
         </div>
+
+        <!-- Mobile cards -->
+        <div class="item-cards" id="item-cards"></div>
       </div>
+
+      <!-- ── ACTIVITY ── -->
+      <div class="page" id="page-activity">
+        <div class="section-header">
+          <div class="section-title">Activity Log</div>
+        </div>
+        <div class="toolbar">
+          <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="search" id="act-search" placeholder="Search by item, job no., PO number…" oninput="renderActivity()"/>
+          </div>
+        </div>
+        <div id="act-result-count" style="font-size:12px;color:var(--mid);margin-bottom:10px;"></div>
+
+        <!-- Desktop table -->
+        <div class="table-wrap" id="act-table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>Item</th><th>Type</th><th>Qty</th><th>Reference / Note</th></tr></thead>
+            <tbody id="act-table-body"></tbody>
+          </table>
+        </div>
+
+        <!-- Mobile list -->
+        <div id="act-cards" style="display:none;flex-direction:column;gap:8px;"></div>
+      </div>
+
+      <!-- ── REPORTS ── -->
+      <div class="page" id="page-reports">
+        <div class="section-title" style="margin-bottom:16px;">Stock Health</div>
+        <div class="health-grid" id="health-grid" style="margin-bottom:24px;"></div>
+
+        <div class="section-title" style="margin-bottom:14px;">Value by Category</div>
+        <div class="table-wrap" style="padding:20px;" id="reports-dept"></div>
+      </div>
+
+      <!-- ── SETTINGS ── -->
+      <div class="page" id="page-settings">
+        <div class="section-header" style="margin-bottom:16px;">
+          <div class="section-title">Categories</div>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-dept')">+ Add</button>
+        </div>
+        <div class="cat-list" id="cat-list"></div>
+      </div>
+
+    </div><!-- /pages -->
+  </div><!-- /main -->
+
+  <!-- Bottom nav (mobile) -->
+  <nav id="bottomnav">
+    <div class="bnav-inner">
+      <button class="bnav-item active" onclick="showTab('inventory')">
+        <span class="bnav-icon">📦</span>
+        <span>Stock</span>
+        <span class="bnav-badge" id="bnav-alert-count"></span>
+      </button>
+      <button class="bnav-item" onclick="showTab('activity')">
+        <span class="bnav-icon">📋</span>
+        <span>Activity</span>
+      </button>
+      <button class="bnav-item" onclick="showTab('reports')">
+        <span class="bnav-icon">📊</span>
+        <span>Reports</span>
+      </button>
+      <button class="bnav-item" onclick="showTab('settings')">
+        <span class="bnav-icon">🏷</span>
+        <span>Categories</span>
+      </button>
     </div>
+  </nav>
+</div><!-- /app -->
+
+<!-- Scan FAB -->
+<button id="scan-fab" onclick="startScan()" title="Scan barcode">⊡</button>
+
+<!-- Scanner overlay -->
+<div id="scanner-overlay">
+  <video id="scanner-video" autoplay playsinline muted></video>
+  <div class="scanner-ui">
+    <div class="scanner-frame"></div>
+    <div class="scanner-label">Point camera at barcode or QR code</div>
   </div>
+  <button class="scanner-close" onclick="stopScan()">✕</button>
 </div>
 
 <!-- Toast -->
 <div id="toast"></div>
 
-<!-- Add Item Modal -->
+<!-- ══════════════════════════════════════════════════════
+     MODALS
+═════════════════════════════════════════════════════════ -->
+
+<!-- Add Item -->
 <div class="modal-backdrop" id="modal-add">
   <div class="modal">
+    <div class="modal-handle"></div>
     <div class="modal-header">
-      <div class="modal-title" id="modal-add-title">Add Stock Item</div>
+      <div class="modal-title">Add Item</div>
       <button class="modal-close" onclick="closeModal('modal-add')">✕</button>
     </div>
     <div class="modal-body">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
         <div class="field" style="grid-column:1/-1;">
-          <label>Item Name *</label>
-          <input type="text" id="f-name" placeholder="e.g. Steel RHS 75x75x5" />
+          <label>Item Name</label>
+          <input type="text" id="add-name" placeholder="e.g. M10 Hex Bolt x 50mm"/>
         </div>
         <div class="field">
-          <label>SKU *</label>
-          <input type="text" id="f-sku" placeholder="e.g. SF-004" />
+          <label>SKU / Code</label>
+          <input type="text" id="add-sku" placeholder="e.g. FIS1422"/>
+        </div>
+        <div class="field">
+          <label>Category</label>
+          <select id="add-dept"></select>
+        </div>
+        <div class="field">
+          <label>Quantity</label>
+          <input type="number" id="add-qty" value="0" min="0"/>
         </div>
         <div class="field">
           <label>Unit</label>
-          <input type="text" id="f-unit" placeholder="pcs / lengths / metres…" />
+          <input type="text" id="add-unit" placeholder="pcs / metres / lengths"/>
         </div>
         <div class="field">
-          <label>Initial Quantity *</label>
-          <input type="number" id="f-qty" placeholder="0" min="0" />
+          <label>Min Level</label>
+          <input type="number" id="add-min" value="0" min="0"/>
         </div>
         <div class="field">
-          <label>Min Level *</label>
-          <input type="number" id="f-minlevel" placeholder="0" min="0" />
-        </div>
-        <div class="field" style="grid-column:1/-1;">
-          <label>Unit Cost (AUD $)</label>
-          <input type="number" id="f-cost" placeholder="0.00" step="0.01" min="0" />
-        </div>
-        <div class="field" style="grid-column:1/-1;">
-          <label>Category</label>
-          <select id="f-dept"></select>
+          <label>Unit Cost ($)</label>
+          <input type="number" id="add-cost" value="0" step="0.01" min="0"/>
         </div>
       </div>
-      <div style="display:flex;gap:10px;margin-top:8px;">
+      <div style="display:flex;gap:10px;margin-top:4px;">
         <button class="btn btn-ghost" style="flex:1;" onclick="closeModal('modal-add')">Cancel</button>
-        <button class="btn btn-primary" style="flex:2;" onclick="saveAdd()" id="btn-save-add">Add Item</button>
+        <button class="btn btn-primary" style="flex:2;" onclick="addItem()" id="btn-add-item">Add Item</button>
       </div>
     </div>
   </div>
 </div>
 
-
-<!-- Edit Item Modal -->
+<!-- Edit Item -->
 <div class="modal-backdrop" id="modal-edit">
   <div class="modal">
+    <div class="modal-handle"></div>
     <div class="modal-header">
       <div class="modal-title">Edit Item</div>
       <button class="modal-close" onclick="closeModal('modal-edit')">✕</button>
@@ -766,31 +721,31 @@
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
         <div class="field" style="grid-column:1/-1;">
           <label>Item Name</label>
-          <input type="text" id="e-name" />
+          <input type="text" id="e-name"/>
         </div>
         <div class="field">
           <label>SKU</label>
-          <input type="text" id="e-sku" />
+          <input type="text" id="e-sku"/>
         </div>
         <div class="field">
           <label>Unit</label>
-          <input type="text" id="e-unit" placeholder="pcs / metres / lengths…" />
+          <input type="text" id="e-unit"/>
         </div>
         <div class="field">
-          <label>Min Level (Alert Threshold)</label>
-          <input type="number" id="e-minlevel" min="0" />
+          <label>Min Level</label>
+          <input type="number" id="e-minlevel" min="0"/>
         </div>
         <div class="field">
-          <label>Unit Cost (AUD $)</label>
-          <input type="number" id="e-cost" step="0.01" min="0" />
+          <label>Unit Cost ($)</label>
+          <input type="number" id="e-cost" step="0.01" min="0"/>
         </div>
         <div class="field" style="grid-column:1/-1;">
           <label>Category</label>
           <select id="e-dept"></select>
         </div>
       </div>
-      <div style="background:var(--dark-3);border-radius:8px;padding:12px 14px;margin:8px 0 16px;font-size:12px;color:var(--mid);">
-        ℹ To adjust the <strong style="color:#fff;">quantity</strong>, use the <strong style="color:var(--teal);">Adjust</strong> button — this keeps a full movement history.
+      <div style="background:var(--dark-3);border-radius:8px;padding:10px 12px;margin:4px 0 14px;font-size:12px;color:var(--mid);">
+        ℹ To change quantity, use the <strong style="color:#fff;">Adjust</strong> button — this keeps full history.
       </div>
       <div style="display:flex;gap:10px;">
         <button class="btn btn-ghost" style="flex:1;" onclick="closeModal('modal-edit')">Cancel</button>
@@ -800,34 +755,73 @@
   </div>
 </div>
 
-<!-- Adjust Modal -->
+<!-- Adjust Stock -->
 <div class="modal-backdrop" id="modal-adjust">
   <div class="modal">
+    <div class="modal-handle"></div>
     <div class="modal-header">
       <div class="modal-title">Adjust Stock</div>
       <button class="modal-close" onclick="closeModal('modal-adjust')">✕</button>
     </div>
     <div class="modal-body">
-      <div id="adjust-item-info" style="background:var(--dark-3);border-radius:8px;padding:14px;margin-bottom:18px;"></div>
-      <div class="field">
-        <label>Movement</label>
-        <div class="dir-toggle">
-          <button class="dir-btn active-in" id="dir-in"  onclick="setDir('in')">▲ Stock In</button>
-          <button class="dir-btn"           id="dir-out" onclick="setDir('out')">▼ Stock Out</button>
+      <div class="adj-item-name" id="adj-item-name"></div>
+      <div class="adj-item-sku"  id="adj-item-sku"></div>
+
+      <div class="adj-dir-tabs">
+        <button class="adj-tab active-in" id="adj-tab-in"  onclick="setAdjDir('in')">▲ Stock In</button>
+        <button class="adj-tab"           id="adj-tab-out" onclick="setAdjDir('out')">▼ Stock Out</button>
+      </div>
+
+      <div class="qty-stepper">
+        <button class="big-btn big-btn-minus" onclick="stepQty(-1)" oncontextmenu="return false;">−</button>
+        <div>
+          <div class="qty-display" id="adj-qty-display">1</div>
+          <div style="font-size:11px;color:var(--mid);text-align:center;" id="adj-unit-label">pcs</div>
         </div>
+        <button class="big-btn big-btn-plus"  onclick="stepQty(+1)" oncontextmenu="return false;">+</button>
       </div>
-      <div class="field">
-        <label>Quantity</label>
-        <input type="number" id="adj-qty" placeholder="Enter amount" min="1" />
+
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+        <button class="btn btn-ghost btn-sm" onclick="setQtyPreset(5)">+5</button>
+        <button class="btn btn-ghost btn-sm" onclick="setQtyPreset(10)">+10</button>
+        <button class="btn btn-ghost btn-sm" onclick="setQtyPreset(25)">+25</button>
+        <button class="btn btn-ghost btn-sm" onclick="setQtyPreset(50)">+50</button>
+        <input type="number" id="adj-qty-input" min="1" placeholder="Custom"
+          style="flex:1;background:var(--dark-3);border:1px solid var(--border-2);border-radius:8px;padding:7px 10px;color:var(--text);font-family:var(--font-body);font-size:13px;outline:none;"
+          oninput="adjQty=parseInt(this.value)||1;document.getElementById('adj-qty-display').textContent=adjQty;"/>
       </div>
-      <div class="field">
-        <label>Job / PO Reference <span style="color:var(--mid);font-weight:400;">(optional)</span></label>
-        <input type="text" id="adj-note" placeholder="e.g.  JOB-4521  or  PO #2241 – The Last Ship" />
-        <div class="field-hint">This will be searchable in the Activity log by job or PO number.</div>
+
+      <div class="field" style="margin-top:14px;">
+        <label>Reference / Note (Job No., PO No.)</label>
+        <input type="text" id="adj-note" placeholder="e.g. JOB-4521 or PO #2241"/>
       </div>
-      <div style="display:flex;gap:10px;margin-top:8px;">
+
+      <div id="adj-current-stock" style="font-size:12px;color:var(--mid);margin-bottom:16px;"></div>
+
+      <div style="display:flex;gap:10px;">
         <button class="btn btn-ghost" style="flex:1;" onclick="closeModal('modal-adjust')">Cancel</button>
-        <button class="btn btn-primary" style="flex:2;" onclick="saveAdjust()" id="btn-save-adj">Save</button>
+        <button class="btn btn-primary" style="flex:2;" onclick="saveAdjust()" id="btn-save-adj">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Category -->
+<div class="modal-backdrop" id="modal-add-dept">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">Add Category</div>
+      <button class="modal-close" onclick="closeModal('modal-add-dept')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Category Name</label>
+        <input type="text" id="new-dept-name" placeholder="e.g. Fasteners"/>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-ghost" style="flex:1;" onclick="closeModal('modal-add-dept')">Cancel</button>
+        <button class="btn btn-primary" style="flex:2;" onclick="addDepartment()">Add Category</button>
       </div>
     </div>
   </div>
@@ -859,36 +853,36 @@ async function sbFetch(path, opts = {}) {
 let items       = [];
 let history     = [];
 let departments = [];
+let filterCat   = 'All';
 let adjItem     = null;
 let adjDir      = 'in';
-let filterCat   = 'All';
+let adjQty      = 1;
+let editItemId  = null;
+let pollTimer   = null;
 
 const uid = () => `fi-${Date.now()}-${Math.random().toString(36).slice(2,6)}`;
-const statusOf = i => i.qty === 0 ? 'out' : i.qty < i.min_level ? 'low' : 'ok';
-const money = v => '$' + Number(v).toLocaleString('en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const extractRef = note => { const m = (note||'').match(/(?:job|j|po|purchase\s*order)?[-\s#]*(\d{3,})/i); return m ? m[0].trim() : null; };
+const statusOf = i => i.qty === 0 ? 'out' : (i.min_level > 0 && i.qty < i.min_level) ? 'low' : 'ok';
+const money = v => '$' + Number(v).toLocaleString('en-AU', { minimumFractionDigits:2, maximumFractionDigits:2 });
+const extractRef = note => { const m=(note||'').match(/(?:job|j|po|purchase\s*order)?[-\s#]*(\d{3,})/i); return m?m[0].trim():null; };
+const isMobile = () => window.innerWidth <= 768;
 
-const DEFAULT_DEPTS = [
-  'Screws', 'RHS', 'Timber Sheets', 'Timber Sticks',
-  'Fixings', 'Sheet Metal', 'Consumables', 'Hardware', 'Other'
-];
+const DEFAULT_DEPTS = ['Screws','RHS','Timber Sheets','Timber Sticks','Fixings','Sheet Metal','Consumables','Hardware','Other'];
 const SEED = [
   { id:uid(), name:'RHS 50x50x3',               sku:'RHS-001', category:'RHS',           qty:24,  unit:'lengths', min_level:10,  cost:48.0  },
-  { id:uid(), name:'RHS 75x75x5',               sku:'RHS-002', category:'RHS',           qty:10,  unit:'lengths', min_level:5,   cost:72.0  },
-  { id:uid(), name:'Plywood Sheet 2400x1200x18', sku:'TS-001',  category:'Timber Sheets', qty:12,  unit:'sheets',  min_level:20,  cost:85.0  },
-  { id:uid(), name:'Plywood Sheet 2400x1200x12', sku:'TS-002',  category:'Timber Sheets', qty:8,   unit:'sheets',  min_level:10,  cost:65.0  },
-  { id:uid(), name:'Pine DAR 90x35mm',           sku:'TK-001',  category:'Timber Sticks', qty:30,  unit:'lengths', min_level:15,  cost:12.5  },
-  { id:uid(), name:'LVL 150x45mm',               sku:'TK-002',  category:'Timber Sticks', qty:15,  unit:'lengths', min_level:8,   cost:28.0  },
   { id:uid(), name:'M10 Hex Bolt x 50mm',        sku:'SC-001',  category:'Screws',        qty:850, unit:'pcs',     min_level:500, cost:0.45  },
-  { id:uid(), name:'M8 Self-Drill Screw 25mm',   sku:'SC-002',  category:'Screws',        qty:1200,unit:'pcs',     min_level:500, cost:0.18  },
+  { id:uid(), name:'Plywood Sheet 2400x1200x18', sku:'TS-001',  category:'Timber Sheets', qty:12,  unit:'sheets',  min_level:20,  cost:85.0  },
 ];
 
-// ── Sync indicator ────────────────────────────────────────
-function setSync(state, label = '') {
-  const el = document.getElementById('sync-indicator');
-  const lbl = document.getElementById('sync-label');
-  el.className = 'sync-dot ' + state;
-  lbl.textContent = label;
+// ── Sync indicators ───────────────────────────────────────
+function setSync(state, label='') {
+  ['sync-dot','sync-dot-top'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.className = 'sync-dot ' + state; }
+  });
+  ['sync-label','sync-label-top'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = label;
+  });
 }
 
 // ── Toast ─────────────────────────────────────────────────
@@ -902,11 +896,13 @@ function showToast(msg) {
 // ── Tab routing ───────────────────────────────────────────
 function showTab(tab) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + tab).classList.add('active');
-  document.querySelector(`[onclick="showTab('${tab}')"]`).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
 
-  const titles = { inventory:'Inventory', activity:'Activity Log', reports:'Reports & Analytics', settings:'Categories' };
+  document.getElementById('page-' + tab).classList.add('active');
+  document.querySelectorAll(`[onclick="showTab('${tab}')"]`).forEach(el => el.classList.add('active'));
+
+  const titles = { inventory:'Inventory', activity:'Activity Log', reports:'Reports', settings:'Categories' };
   document.getElementById('topbar-title').textContent = titles[tab] || '';
   document.getElementById('topbar-add-btn').style.display = tab === 'inventory' ? '' : 'none';
 
@@ -915,65 +911,70 @@ function showTab(tab) {
   if (tab === 'settings') renderSettings();
 }
 
+// ── Modal helpers ─────────────────────────────────────────
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('modal-backdrop')) e.target.classList.remove('open');
+});
+
 // ── Load data ─────────────────────────────────────────────
 async function loadData() {
   setSync('saving', 'Loading…');
   try {
     const [itemsData, histData, deptData] = await Promise.all([
       sbFetch('stock_items?order=name.asc'),
-      sbFetch('stock_history?order=created_at.desc&limit=300'),
+      sbFetch('stock_history?order=created_at.desc&limit=500'),
       sbFetch('departments?order=name.asc').catch(() => []),
     ]);
 
-    if (itemsData.length === 0) {
-      for (const item of SEED) await sbFetch('stock_items', { method:'POST', body:JSON.stringify(item) });
-      items = SEED;
-    } else { items = itemsData; }
-
+    items   = itemsData.length ? itemsData : SEED;
     history = histData;
 
-    // Build the full category list: everything in departments table + every unique
-    // category value already on items. One single bulk upsert handles the rest.
-    const allCurrentItems = itemsData.length ? itemsData : SEED;
-    const existingNames   = new Set(deptData.map(d => d.name));
-    const missingNames    = [...new Set(allCurrentItems.map(i => i.category).filter(Boolean))]
-                              .filter(n => !existingNames.has(n));
+    if (itemsData.length === 0) {
+      for (const item of SEED) await sbFetch('stock_items', { method:'POST', body:JSON.stringify(item) });
+    }
+
+    // Bulk sync categories from item data
+    const existingNames = new Set(deptData.map(d => d.name));
+    const missingNames  = [...new Set(items.map(i => i.category).filter(Boolean))].filter(n => !existingNames.has(n));
     if (missingNames.length > 0) {
-      // Bulk upsert — one API call for all missing categories
       const newRows = missingNames.map(name => ({ id: uid(), name }));
       try {
-        const inserted = await sbFetch('departments', {
-          method: 'POST',
-          body: JSON.stringify(newRows),
-          prefer: 'resolution=ignore-duplicates,return=representation',
-        });
-        if (Array.isArray(inserted)) inserted.forEach(d => deptData.push(d));
+        const ins = await sbFetch('departments', { method:'POST', body:JSON.stringify(newRows), prefer:'resolution=ignore-duplicates,return=representation' });
+        if (Array.isArray(ins)) ins.forEach(d => deptData.push(d));
         else newRows.forEach(r => deptData.push(r));
       } catch { newRows.forEach(r => deptData.push(r)); }
     }
     if (deptData.length === 0) {
-      // Brand new database — seed defaults
-      const seedRows = DEFAULT_DEPTS.map(name => ({ id: uid(), name }));
+      const seedRows = DEFAULT_DEPTS.map(name => ({ id:uid(), name }));
       try {
-        const inserted = await sbFetch('departments', {
-          method: 'POST',
-          body: JSON.stringify(seedRows),
-          prefer: 'resolution=ignore-duplicates,return=representation',
-        });
-        deptData.push(...(Array.isArray(inserted) ? inserted : seedRows));
+        const ins = await sbFetch('departments', { method:'POST', body:JSON.stringify(seedRows), prefer:'resolution=ignore-duplicates,return=representation' });
+        deptData.push(...(Array.isArray(ins) ? ins : seedRows));
       } catch { deptData.push(...seedRows); }
     }
     departments = deptData.sort((a,b) => a.name.localeCompare(b.name));
 
     document.getElementById('loading-screen').style.display = 'none';
     setSync('saved', 'Synced ✓');
-    setTimeout(() => setSync('idle', ''), 3000);
+    setTimeout(() => setSync('idle',''), 3000);
     renderAll();
+    startPolling();
   } catch(e) {
-    setSync('idle', '');
-    alert('Connection error: ' + e.message);
+    setSync('idle','');
     document.getElementById('loading-screen').style.display = 'none';
+    alert('Connection error: ' + e.message);
   }
+}
+
+function startPolling() {
+  if (pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(async () => {
+    try {
+      const fresh = await sbFetch('stock_items?order=name.asc');
+      if (fresh.length) { items = fresh; renderAll(); }
+    } catch {}
+  }, 10000);
 }
 
 function renderAll() {
@@ -986,21 +987,27 @@ function renderAll() {
 
 // ── Summary ───────────────────────────────────────────────
 function renderSummary() {
-  const alerts = items.filter(i => statusOf(i) !== 'ok');
+  const alerts   = items.filter(i => statusOf(i) !== 'ok');
   const totalVal = items.reduce((s,i) => s + i.qty * i.cost, 0);
 
-  // nav alert badge
+  [['nav-alert-count','bnav-alert-count']].flat().forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.display = alerts.length > 0 ? '' : 'none';
+    el.textContent   = alerts.length;
+  });
   const navBadge = document.getElementById('nav-alert-count');
-  navBadge.style.display = alerts.length > 0 ? '' : 'none';
-  navBadge.textContent = alerts.length;
+  if (navBadge) { navBadge.style.display = alerts.length?'':'none'; navBadge.textContent = alerts.length; }
+  const bnavBadge = document.getElementById('bnav-alert-count');
+  if (bnavBadge) { bnavBadge.style.display = alerts.length?'':'none'; bnavBadge.textContent = alerts.length; }
 
   document.getElementById('summary-grid').innerHTML = [
-    { icon:'📦', label:'Total Items',      val: items.length },
-    { icon:'💰', label:'Inventory Value',  val: money(totalVal) },
-    { icon:'⚠️', label:'Stock Alerts',     val: alerts.length, warn: alerts.length > 0 },
-    { icon:'🏷', label:'Categories',      val: departments.length },
+    { icon:'📦', label:'Total Items',     val: items.length.toLocaleString() },
+    { icon:'💰', label:'Inventory Value', val: money(totalVal) },
+    { icon:'⚠️', label:'Stock Alerts',    val: alerts.length, warn: alerts.length > 0 },
+    { icon:'🏷',  label:'Categories',     val: departments.length },
   ].map(c => `
-    <div class="summary-card${c.warn ? ' warn' : ''}">
+    <div class="summary-card${c.warn?' warn':''}">
       <div class="summary-icon">${c.icon}</div>
       <div class="summary-val">${c.val}</div>
       <div class="summary-label">${c.label}</div>
@@ -1008,411 +1015,464 @@ function renderSummary() {
   `).join('');
 }
 
-// ── Alert banner ──────────────────────────────────────────
+// ── Alerts ────────────────────────────────────────────────
+let alertsExpanded = false;
+
+function toggleAlerts() {
+  alertsExpanded = !alertsExpanded;
+  renderAlerts();
+}
+
 function renderAlerts() {
   const alerts = items.filter(i => statusOf(i) !== 'ok');
   const el = document.getElementById('alert-banner');
-  if (alerts.length === 0) { el.innerHTML = ''; return; }
-  el.innerHTML = `
-    <div class="alert-banner">
-      <div class="alert-banner-title">⚠  Stock Alerts — Action Required</div>
-      ${alerts.map(a => {
-        const st = statusOf(a);
-        return `<div class="alert-item">
-          <div>
-            <span style="font-weight:600;color:#fff;font-size:13px;">${a.name}</span>
-            <span style="font-size:11px;color:var(--mid);margin-left:8px;">${a.sku}</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span class="badge badge-${st}">${st === 'low' ? 'Low Stock' : 'Out of Stock'}</span>
-            <button class="btn btn-ghost btn-sm" onclick="openAdjustModal('${a.id}')">Adjust</button>
-          </div>
-        </div>`;
-      }).join('')}
+  if (!alerts.length) { el.innerHTML = ''; alertsExpanded = false; return; }
+
+  const chevron = alertsExpanded ? '▲' : '▼';
+  const itemsHtml = alertsExpanded ? alerts.map(a => {
+    const st = statusOf(a);
+    return `<div class="alert-item">
+      <div>
+        <span style="font-weight:600;color:#fff;font-size:13px;">${a.name}</span>
+        <span style="font-size:11px;color:var(--mid);margin-left:8px;">${a.sku}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="badge badge-${st}">${st==='low'?'Low':'Out'}</span>
+        <button class="btn btn-ghost btn-sm" onclick="openAdjustModal('${a.id}')">Adjust</button>
+      </div>
     </div>`;
+  }).join('') : '';
+
+  el.innerHTML = `<div class="alert-banner">
+    <div class="alert-banner-title" onclick="toggleAlerts()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;">
+      <span>⚠  ${alerts.length} item${alerts.length!==1?'s':''} need attention</span>
+      <span style="font-size:12px;opacity:.7;">${chevron} ${alertsExpanded?'Hide':'Show'}</span>
+    </div>
+    ${itemsHtml}
+  </div>`;
 }
 
-// ── Dept filter chips ─────────────────────────────────────
+// ── Dept chips ────────────────────────────────────────────
 function renderDeptChips() {
-  const deptNames = departments.map(d => d.name);
   document.getElementById('dept-filter-chips').innerHTML =
-    ['All', ...deptNames].map(c => `
-      <button class="chip${filterCat === c ? ' active' : ''}" onclick="setDeptFilter('${c}')">${c}</button>
-    `).join('');
+    ['All', ...departments.map(d => d.name)].map(c =>
+      `<button class="chip${filterCat===c?' active':''}" onclick="setDeptFilter('${c.replace(/'/g,"\\'")}')">
+        ${c}${c!=='All'?' <span style="font-size:10px;opacity:.6;">('+items.filter(i=>i.category===c).length+')</span>':''}
+      </button>`
+    ).join('');
 }
 
-function setDeptFilter(cat) {
-  filterCat = cat;
-  renderDeptChips();
-  renderInventory();
-}
+function setDeptFilter(cat) { filterCat = cat; renderDeptChips(); renderInventory(); }
 
-// ── Inventory table ───────────────────────────────────────
+// ── Inventory ─────────────────────────────────────────────
 function renderInventory() {
-  const search = document.getElementById('inv-search').value.toLowerCase();
+  const search  = document.getElementById('inv-search').value.toLowerCase();
   const statusF = document.getElementById('inv-status-filter').value;
 
   const filtered = items.filter(i => {
-    const matchSearch = i.name.toLowerCase().includes(search) || i.sku.toLowerCase().includes(search);
-    const matchCat    = filterCat === 'All' || i.category === filterCat;
-    const matchStatus = statusF === 'all' || statusOf(i) === statusF;
-    return matchSearch && matchCat && matchStatus;
+    const matchS = !search || i.name.toLowerCase().includes(search) || (i.sku||'').toLowerCase().includes(search);
+    const matchC = filterCat === 'All' || i.category === filterCat;
+    const matchT = statusF === 'all' || statusOf(i) === statusF;
+    return matchS && matchC && matchT;
   });
 
-  const body = document.getElementById('inv-table-body');
+  // Desktop table
+  const tbody = document.getElementById('inv-table-body');
   if (filtered.length === 0) {
-    body.innerHTML = `<tr><td colspan="9"><div class="empty"><div class="empty-icon">🔍</div>No items found</div></td></tr>`;
-    return;
+    tbody.innerHTML = `<tr><td colspan="9"><div class="empty"><div class="empty-icon">🔍</div><p>No items found</p></div></td></tr>`;
+  } else {
+    tbody.innerHTML = filtered.map(item => {
+      const st = statusOf(item);
+      const name = item.name.replace(/'/g,"\\'");
+      return `<tr>
+        <td><span class="sku-tag">${item.sku||'—'}</span></td>
+        <td style="font-weight:600;color:#fff;">${item.name}</td>
+        <td><span class="cat-tag">${item.category||'—'}</span></td>
+        <td style="font-weight:700;color:${st==='ok'?'var(--ok)':st==='low'?'var(--low)':'var(--out)'};">
+          ${Number(item.qty).toLocaleString()} <span style="font-size:11px;color:var(--mid);">${item.unit}</span>
+        </td>
+        <td style="color:var(--mid);">${item.min_level}</td>
+        <td>${money(item.cost)}</td>
+        <td style="font-weight:600;">${money(item.qty*item.cost)}</td>
+        <td><span class="badge badge-${st}">${st==='ok'?'In Stock':st==='low'?'Low':'Out'}</span></td>
+        <td>
+          <div style="display:flex;gap:5px;">
+            <button class="btn btn-ghost btn-sm" onclick="openAdjustModal('${item.id}')">Adjust</button>
+            <button class="btn btn-ghost btn-sm" onclick="openEditModal('${item.id}')" style="color:var(--teal);">Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteItem('${item.id}','${name}')">✕</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
   }
 
-  body.innerHTML = filtered.map(item => {
-    const st = statusOf(item);
-    return `<tr class="stripe-${st}">
-      <td><span class="sku-tag">${item.sku}</span></td>
-      <td style="font-weight:600;color:#fff;">${item.name}</td>
-      <td><span class="cat-tag">${item.category || '—'}</span></td>
-      <td style="font-weight:700;color:${st==='ok'?'var(--ok)':st==='low'?'var(--low)':'var(--out)'};">
-        ${Number(item.qty).toLocaleString()} <span style="font-size:11px;color:var(--mid);">${item.unit}</span>
-      </td>
-      <td style="color:var(--mid);">${item.min_level}</td>
-      <td>${money(item.cost)}</td>
-      <td style="font-weight:600;">${money(item.qty * item.cost)}</td>
-      <td><span class="badge badge-${st}">${st==='ok'?'In Stock':st==='low'?'Low Stock':'Out of Stock'}</span></td>
-      <td>
-        <div style="display:flex;gap:6px;">
-          <button class="btn btn-ghost btn-sm" onclick="openAdjustModal('${item.id}')">Adjust</button>
-          <button class="btn btn-ghost btn-sm" onclick="openEditModal('${item.id}')" style="color:var(--teal);border-color:var(--teal)44;">Edit</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteItem('${item.id}','${item.name.replace(/'/g,"\\'")}')">✕</button>
+  // Mobile cards
+  const cards = document.getElementById('item-cards');
+  if (filtered.length === 0) {
+    cards.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><p>No items found</p></div>`;
+  } else {
+    cards.innerHTML = filtered.map(item => {
+      const st = statusOf(item);
+      const color = st==='ok'?'var(--ok)':st==='low'?'var(--low)':'var(--out)';
+      return `<div class="item-card" onclick="openAdjustModal('${item.id}')">
+        <div class="item-card-status" style="background:${color};"></div>
+        <div class="item-card-body">
+          <div class="item-card-name">${item.name}</div>
+          <div class="item-card-meta">
+            <span class="sku-tag" style="font-size:10px;">${item.sku||'—'}</span>
+            &nbsp;·&nbsp;<span class="cat-tag" style="font-size:10px;">${item.category||'—'}</span>
+          </div>
         </div>
-      </td>
-    </tr>`;
-  }).join('');
+        <div>
+          <div class="item-card-qty" style="color:${color};">${Number(item.qty).toLocaleString()}</div>
+          <div class="item-card-unit">${item.unit}</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openEditModal('${item.id}')" style="color:var(--teal);padding:6px 10px;">✎</button>
+      </div>`;
+    }).join('');
+  }
 }
 
-// ── Activity tab ──────────────────────────────────────────
+// ── Activity ─────────────────────────────────────────────
 function renderActivity() {
-  const search = (document.getElementById('act-search')?.value || '').toLowerCase().trim();
-  const filtered = search
-    ? history.filter(h =>
-        (h.item_name||'').toLowerCase().includes(search) ||
-        (h.note||'').toLowerCase().includes(search))
-    : history;
+  const search   = (document.getElementById('act-search')?.value||'').toLowerCase().trim();
+  const filtered = search ? history.filter(h =>
+    (h.item_name||'').toLowerCase().includes(search) ||
+    (h.note||'').toLowerCase().includes(search)
+  ) : history;
 
-  const count = document.getElementById('act-result-count');
-  count.textContent = search ? `${filtered.length} result${filtered.length!==1?'s':''} for "${document.getElementById('act-search').value}"` : '';
+  const countEl = document.getElementById('act-result-count');
+  countEl.textContent = search ? `${filtered.length} result${filtered.length!==1?'s':''} for "${document.getElementById('act-search').value}"` : `${filtered.length} movements`;
 
-  const body = document.getElementById('act-table-body');
-  if (filtered.length === 0) {
-    body.innerHTML = `<tr><td colspan="5"><div class="empty"><div class="empty-icon">🔍</div>No movements found${search?' for "'+document.getElementById('act-search').value+'"':''}.<br><small>Try a job number, PO number or item name.</small></div></td></tr>`;
-    return;
-  }
+  const empty = `<div class="empty"><div class="empty-icon">🔍</div><p>No movements found${search?' for that search':''}</p></div>`;
 
-  body.innerHTML = filtered.map(h => {
-    const note     = h.note || '';
-    const ref      = extractRef(note);
-    const isMatch  = search && note.toLowerCase().includes(search);
-    const noteHtml = isMatch
-      ? note.replace(new RegExp(`(${document.getElementById('act-search').value})`, 'gi'), '<span class="note-match">$1</span>')
-      : (note || '<span style="color:var(--mid)">No reference</span>');
+  // Desktop
+  const tbody = document.getElementById('act-table-body');
+  tbody.innerHTML = filtered.length === 0 ? `<tr><td colspan="5">${empty}</td></tr>` :
+    filtered.map(h => {
+      const ref = extractRef(h.note);
+      return `<tr>
+        <td style="font-family:var(--font-mono);font-size:11px;color:var(--mid);white-space:nowrap;">${h.date||''}</td>
+        <td style="font-weight:600;color:#fff;">${h.item_name||''}</td>
+        <td><span class="badge badge-${h.type==='in'?'in':'out-move'}">${h.type==='in'?'▲ IN':'▼ OUT'}</span></td>
+        <td style="font-weight:700;color:${h.type==='in'?'var(--ok)':'var(--out)'};">${h.type==='in'?'+':'-'}${h.qty}</td>
+        <td>${ref?`<span class="ref-chip">${ref}</span>`:''}<span style="font-size:12px;color:var(--mid);">${h.note||''}</span></td>
+      </tr>`;
+    }).join('');
 
-    return `<tr>
-      <td style="font-family:var(--font-mono);font-size:12px;color:var(--mid);">${h.date}</td>
-      <td style="font-weight:600;color:#fff;">${h.item_name}</td>
-      <td><span class="badge badge-${h.type==='in'?'in':'out-move'}">${h.type==='in'?'▲ IN':'▼ OUT'}</span></td>
-      <td style="font-weight:700;color:${h.type==='in'?'var(--ok)':'var(--out)'};">${h.type==='in'?'+':'-'}${h.qty}</td>
-      <td>
-        ${ref ? `<span class="ref-chip"># ${ref}</span>` : ''}
-        <span style="font-size:12px;color:${isMatch?'var(--teal)':'var(--mid)'};">${noteHtml}</span>
-      </td>
-    </tr>`;
-  }).join('');
+  // Mobile cards
+  const cards = document.getElementById('act-cards');
+  cards.innerHTML = filtered.length === 0 ? empty :
+    filtered.map(h => {
+      const ref = extractRef(h.note);
+      const isIn = h.type === 'in';
+      return `<div style="background:var(--dark-2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <span style="font-weight:600;color:#fff;font-size:13px;">${h.item_name||''}</span>
+          <span style="font-family:var(--font-head);font-size:18px;font-weight:800;color:${isIn?'var(--ok)':'var(--out)'};">${isIn?'+':'-'}${h.qty}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span class="badge badge-${isIn?'in':'out-move'}">${isIn?'▲ IN':'▼ OUT'}</span>
+          ${ref?`<span class="ref-chip">${ref}</span>`:''}
+          <span style="font-size:11px;color:var(--mid);">${h.date||''}</span>
+        </div>
+        ${h.note?`<div style="font-size:12px;color:var(--mid);margin-top:5px;">${h.note}</div>`:''}
+      </div>`;
+    }).join('');
+
+  // Toggle desktop/mobile
+  document.getElementById('act-table-wrap').style.display = isMobile() ? 'none' : '';
+  cards.style.display = isMobile() ? 'flex' : 'none';
 }
 
 // ── Reports ───────────────────────────────────────────────
 function renderReports() {
-  const totalVal = items.reduce((s,i) => s+i.qty*i.cost, 0);
+  const ok  = items.filter(i=>statusOf(i)==='ok').length;
+  const low = items.filter(i=>statusOf(i)==='low').length;
+  const out = items.filter(i=>statusOf(i)==='out').length;
 
-  // Dept breakdown
-  const deptMap = {};
-  items.forEach(i => { deptMap[i.category] = (deptMap[i.category]||0) + i.qty*i.cost; });
-  const deptEntries = Object.entries(deptMap).sort((a,b) => b[1]-a[1]);
+  document.getElementById('health-grid').innerHTML = `
+    <div class="health-card"><div class="health-num" style="color:var(--ok);">${ok}</div><div class="health-lbl">In Stock</div></div>
+    <div class="health-card"><div class="health-num" style="color:var(--low);">${low}</div><div class="health-lbl">Low Stock</div></div>
+    <div class="health-card"><div class="health-num" style="color:var(--out);">${out}</div><div class="health-lbl">Out of Stock</div></div>
+  `;
 
-  document.getElementById('reports-dept').innerHTML = deptEntries.map(([cat, val]) => {
-    const pct = totalVal > 0 ? (val/totalVal)*100 : 0;
+  const totalVal = items.reduce((s,i)=>s+i.qty*i.cost,0);
+  const deptMap  = {};
+  items.forEach(i => { deptMap[i.category]=(deptMap[i.category]||0)+i.qty*i.cost; });
+  const sorted = Object.entries(deptMap).sort((a,b)=>b[1]-a[1]);
+
+  document.getElementById('reports-dept').innerHTML = sorted.map(([cat,val])=>{
+    const pct = totalVal>0?(val/totalVal)*100:0;
     return `<div class="bar-row">
       <div class="bar-label">
         <span style="font-weight:600;color:#fff;">${cat}</span>
-        <span style="color:var(--mid);">${money(val)} (${Math.round(pct)}%)</span>
+        <span style="color:var(--mid);">${money(val)} &nbsp;${Math.round(pct)}%</span>
       </div>
       <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
     </div>`;
   }).join('') + `<div style="border-top:1px solid var(--border);margin-top:16px;padding-top:14px;display:flex;justify-content:space-between;font-weight:700;">
-    <span style="color:var(--mid);">Total Value</span>
-    <span style="color:var(--teal);">${money(totalVal)}</span>
+    <span style="color:var(--mid);">Total Value</span><span style="color:#fff;">${money(totalVal)}</span>
   </div>`;
-
-  // Health
-  document.getElementById('reports-health').innerHTML = [
-    ['ok','In Stock','var(--ok)'],['low','Low Stock','var(--low)'],['out','Out of Stock','var(--out)']
-  ].map(([st,label,color]) => {
-    const count = items.filter(i=>statusOf(i)===st).length;
-    const pct   = items.length > 0 ? (count/items.length)*100 : 0;
-    return `<div class="bar-row">
-      <div class="bar-label">
-        <span style="font-weight:600;color:${color};">${label}</span>
-        <span style="color:var(--mid);">${count} items (${Math.round(pct)}%)</span>
-      </div>
-      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color};"></div></div>
-    </div>`;
-  }).join('');
-
-  // Recent
-  document.getElementById('reports-recent').innerHTML = history.slice(0,8).map(h => {
-    const ref = extractRef(h.note||'');
-    return `<tr>
-      <td style="font-family:var(--font-mono);font-size:12px;color:var(--mid);">${h.date}</td>
-      <td style="font-weight:600;">${h.item_name}</td>
-      <td><span class="badge badge-${h.type==='in'?'in':'out-move'}">${h.type==='in'?'▲ IN':'▼ OUT'}</span></td>
-      <td style="font-weight:700;color:${h.type==='in'?'var(--ok)':'var(--out)'};">${h.type==='in'?'+':'-'}${h.qty}</td>
-      <td>${ref?`<span class="ref-chip"># ${ref}</span>`:''}<span style="font-size:12px;color:var(--mid);">${h.note||'—'}</span></td>
-    </tr>`;
-  }).join('');
 }
 
-// ── Settings / Categories ────────────────────────────────
+// ── Settings ──────────────────────────────────────────────
 function renderSettings() {
-  const el = document.getElementById('dept-list');
-  if (departments.length === 0) {
-    el.innerHTML = '<div style="color:var(--mid);text-align:center;padding:24px 0;">No categories yet. Add one above.</div>';
-  } else {
-    el.innerHTML = departments.map(dept => {
-      const count = items.filter(i => i.category === dept.name).length;
-      return `<div class="dept-row">
-        <div class="dept-name">${dept.name}</div>
-        <div class="dept-count">${count} item${count!==1?'s':''}</div>
-        <button class="btn btn-danger btn-sm" onclick="deleteDepartment('${dept.id}','${dept.name.replace(/'/g,"\\'")}',${count})">Remove</button>
-      </div>`;
-    }).join('');
-  }
-
-  document.getElementById('about-table').innerHTML = [
-    ['App', 'FI Stock Manager'],
-    ['Database', '<span style="color:var(--teal)">Supabase (shared live)</span>'],
-    ['Categories', departments.length + ' configured'],
-    ['Stock items', items.length + ' tracked'],
-    ['Activity records', history.length + ' logged'],
-  ].map(([k,v]) => `
-    <tr>
-      <td style="padding:9px 14px;border-bottom:1px solid var(--border);color:var(--mid);font-size:13px;">${k}</td>
-      <td style="padding:9px 14px;border-bottom:1px solid var(--border);font-weight:600;font-size:13px;">${v}</td>
-    </tr>
-  `).join('');
+  document.getElementById('cat-list').innerHTML = departments.map(dept => {
+    const count = items.filter(i=>i.category===dept.name).length;
+    return `<div class="cat-row">
+      <div>
+        <div class="cat-row-name">${dept.name}</div>
+        <div class="cat-row-count">${count} item${count!==1?'s':''}</div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="deleteDepartment('${dept.id}','${dept.name.replace(/'/g,"\\'")}',${count})">Remove</button>
+    </div>`;
+  }).join('') || '<div class="empty"><div class="empty-icon">🏷</div><p>No categories yet</p></div>';
 }
 
-// ── Category CRUD ───────────────────────────────────────
-async function addDepartment() {
-  const name = document.getElementById('new-dept-input').value.trim();
-  if (!name) return;
-  if (departments.some(d => d.name.toLowerCase() === name.toLowerCase())) {
-    alert(`"${name}" already exists.`); return;
-  }
-  try {
-    setSync('saving', 'Saving…');
-    const dept = { id: uid(), name };
-    const [created] = await sbFetch('departments', { method: 'POST', body: JSON.stringify(dept) });
-    departments.push(created || dept);
-    departments.sort((a,b) => a.name.localeCompare(b.name));
-    document.getElementById('new-dept-input').value = '';
-    setSync('saved', 'Saved ✓'); setTimeout(() => setSync('idle',''), 2500);
-    showToast(`✓  "${name}" added`);
-    renderSettings();
-    renderDeptChips();
-    renderSummary();
-    populateDeptSelects();
-  } catch(e) { alert('Error: ' + e.message); }
-}
-
-async function deleteDepartment(id, name, count) {
-  const msg = count > 0
-    ? `"${name}" is used by ${count} item(s). Those items keep their label but the category won't appear in lists. Continue?`
-    : `Remove "${name}"?`;
-  if (!confirm(msg)) return;
-  try {
-    await sbFetch(`departments?id=eq.${id}`, { method:'DELETE', prefer:'return=minimal' });
-    departments = departments.filter(d => d.id !== id);
-    showToast(`"${name}" removed`);
-    renderSettings();
-    renderDeptChips();
-    renderSummary();
-    populateDeptSelects();
-  } catch(e) { alert('Error: ' + e.message); }
-}
-
-// ── Modals ────────────────────────────────────────────────
-function openModal(id)  { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
+// ── Dept selects ──────────────────────────────────────────
 function populateDeptSelects() {
-  const sel = document.getElementById('f-dept');
-  if (!sel) return;
-  sel.innerHTML = departments.map(d => `<option value="${d.name}">${d.name}</option>`).join('');
+  const opts = departments.map(d=>`<option value="${d.name}">${d.name}</option>`).join('');
+  ['add-dept','e-dept'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = opts;
+  });
 }
 
-function openAddModal(skuPrefill = '') {
-  document.getElementById('f-name').value = '';
-  document.getElementById('f-sku').value  = skuPrefill;
-  document.getElementById('f-unit').value = 'pcs';
-  document.getElementById('f-qty').value  = '';
-  document.getElementById('f-minlevel').value = '';
-  document.getElementById('f-cost').value = '';
-  document.getElementById('modal-add-title').textContent = skuPrefill ? `New Item · ${skuPrefill}` : 'Add Stock Item';
-  populateDeptSelects();
-  openModal('modal-add');
-  setTimeout(() => document.getElementById('f-name').focus(), 100);
-}
-
-async function saveAdd() {
-  const name     = document.getElementById('f-name').value.trim();
-  const sku      = document.getElementById('f-sku').value.trim();
-  const unit     = document.getElementById('f-unit').value.trim() || 'pcs';
-  const qty      = parseInt(document.getElementById('f-qty').value) || 0;
-  const minLevel = parseInt(document.getElementById('f-minlevel').value) || 0;
-  const cost     = parseFloat(document.getElementById('f-cost').value) || 0;
-  const category = document.getElementById('f-dept').value;
-
+// ── Add item ──────────────────────────────────────────────
+async function addItem() {
+  const name = document.getElementById('add-name').value.trim();
+  const sku  = document.getElementById('add-sku').value.trim();
   if (!name || !sku) { alert('Name and SKU are required.'); return; }
 
-  const btn = document.getElementById('btn-save-add');
-  btn.disabled = true; btn.textContent = 'Saving…';
-  setSync('saving', 'Saving…');
+  const btn = document.getElementById('btn-add-item');
+  btn.disabled = true; btn.textContent = 'Adding…';
+  setSync('saving','Saving…');
 
   try {
-    const item = { id: uid(), name, sku, unit, qty, min_level: minLevel, cost, category };
-    await sbFetch('stock_items', { method:'POST', body:JSON.stringify(item) });
-    const rec = { id:uid(), item_id:item.id, item_name:name, type:'in', qty, note:'Initial stock', date: new Date().toISOString().slice(0,10) };
-    await sbFetch('stock_history', { method:'POST', body:JSON.stringify(rec) });
-    items.push(item);
-    items.sort((a,b) => a.name.localeCompare(b.name));
-    history.unshift(rec);
+    const item = {
+      id: uid(), name, sku,
+      category : document.getElementById('add-dept').value,
+      qty      : parseInt(document.getElementById('add-qty').value)||0,
+      unit     : document.getElementById('add-unit').value.trim()||'pcs',
+      min_level: parseInt(document.getElementById('add-min').value)||0,
+      cost     : parseFloat(document.getElementById('add-cost').value)||0,
+    };
+    const [saved] = await sbFetch('stock_items', { method:'POST', body:JSON.stringify(item) });
+    items.push(saved||item);
     closeModal('modal-add');
+    ['add-name','add-sku','add-unit','add-note'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+    document.getElementById('add-qty').value = '0';
+    document.getElementById('add-min').value  = '0';
+    document.getElementById('add-cost').value = '0';
     setSync('saved','Saved ✓'); setTimeout(()=>setSync('idle',''),2500);
     showToast(`✓  ${name} added`);
     renderAll();
-  } catch(e) { alert('Error: ' + e.message); }
-  btn.disabled = false; btn.textContent = 'Add Item';
+  } catch(e) { alert('Error: '+e.message); }
+  btn.disabled=false; btn.textContent='Add Item';
 }
 
+// ── Adjust modal ──────────────────────────────────────────
 function openAdjustModal(itemId) {
-  adjItem = items.find(i => i.id === itemId);
+  adjItem = items.find(i=>i.id===itemId);
   if (!adjItem) return;
-  document.getElementById('adjust-item-info').innerHTML = `
-    <div style="font-weight:700;font-size:15px;color:#fff;margin-bottom:4px;">${adjItem.name}</div>
-    <div style="font-family:var(--font-mono);font-size:11px;color:var(--mid);">${adjItem.sku}</div>
-    <div style="font-size:13px;color:var(--mid);margin-top:8px;">
-      Current stock: <strong style="color:#fff;">${adjItem.qty} ${adjItem.unit}</strong>
-    </div>`;
-  document.getElementById('adj-qty').value  = '';
+  adjQty = 1; adjDir = 'in';
+  document.getElementById('adj-item-name').textContent = adjItem.name;
+  document.getElementById('adj-item-sku').textContent  = adjItem.sku;
+  document.getElementById('adj-unit-label').textContent = adjItem.unit||'pcs';
+  document.getElementById('adj-qty-display').textContent = '1';
+  document.getElementById('adj-qty-input').value = '';
   document.getElementById('adj-note').value = '';
-  setDir('in');
+  document.getElementById('adj-current-stock').textContent =
+    `Current stock: ${Number(adjItem.qty).toLocaleString()} ${adjItem.unit}`;
+  setAdjDir('in');
   openModal('modal-adjust');
-  setTimeout(() => document.getElementById('adj-qty').focus(), 100);
 }
 
-function setDir(dir) {
+function setAdjDir(dir) {
   adjDir = dir;
-  document.getElementById('dir-in').className  = 'dir-btn' + (dir==='in'  ? ' active-in'  : '');
-  document.getElementById('dir-out').className = 'dir-btn' + (dir==='out' ? ' active-out' : '');
+  document.getElementById('adj-tab-in').className  = 'adj-tab' + (dir==='in'?' active-in':'');
+  document.getElementById('adj-tab-out').className = 'adj-tab' + (dir==='out'?' active-out':'');
+}
+
+function stepQty(delta) {
+  adjQty = Math.max(1, adjQty + delta);
+  document.getElementById('adj-qty-display').textContent = adjQty;
+  document.getElementById('adj-qty-input').value = '';
+}
+
+function setQtyPreset(n) {
+  adjQty = n;
+  document.getElementById('adj-qty-display').textContent = n;
+  document.getElementById('adj-qty-input').value = '';
 }
 
 async function saveAdjust() {
-  const qty  = parseInt(document.getElementById('adj-qty').value);
-  const note = document.getElementById('adj-note').value.trim();
-  if (!qty || qty <= 0) { alert('Enter a valid quantity.'); return; }
-
+  if (!adjItem || adjQty < 1) return;
   const btn = document.getElementById('btn-save-adj');
-  btn.disabled = true; btn.textContent = 'Saving…';
-  setSync('saving', 'Saving…');
-
+  btn.disabled=true; btn.textContent='Saving…';
+  setSync('saving','Saving…');
   try {
-    const newQty = adjDir === 'in' ? adjItem.qty + qty : Math.max(0, adjItem.qty - qty);
-    await sbFetch(`stock_items?id=eq.${adjItem.id}`, { method:'PATCH', body:JSON.stringify({ qty:newQty }), prefer:'return=minimal' });
-    const rec = { id:uid(), item_id:adjItem.id, item_name:adjItem.name, type:adjDir, qty, note, date:new Date().toISOString().slice(0,10) };
-    await sbFetch('stock_history', { method:'POST', body:JSON.stringify(rec) });
+    const newQty = adjDir==='in' ? adjItem.qty+adjQty : Math.max(0, adjItem.qty-adjQty);
+    const note   = document.getElementById('adj-note').value.trim();
+    const today  = new Date().toISOString().slice(0,10);
+    await sbFetch(`stock_items?id=eq.${adjItem.id}`, { method:'PATCH', body:JSON.stringify({qty:newQty}), prefer:'return=minimal,count=none' });
+    await sbFetch('stock_history', { method:'POST', body:JSON.stringify({ id:uid(), item_id:adjItem.id, item_name:adjItem.name, type:adjDir, qty:adjQty, note, date:today }) });
+    adjItem.qty = newQty;
     items = items.map(i => i.id===adjItem.id ? {...i, qty:newQty} : i);
-    history.unshift(rec);
+    history.unshift({ id:uid(), item_id:adjItem.id, item_name:adjItem.name, type:adjDir, qty:adjQty, note, date:today, created_at:new Date().toISOString() });
     closeModal('modal-adjust');
     setSync('saved','Saved ✓'); setTimeout(()=>setSync('idle',''),2500);
-    showToast(`✓  ${adjItem.name} updated`);
+    showToast(`✓  ${adjDir==='in'?'+':'-'}${adjQty} ${adjItem.unit} — ${adjItem.name}`);
     renderAll();
-  } catch(e) { alert('Error: ' + e.message); }
-  btn.disabled = false; btn.textContent = 'Save';
+  } catch(e) { alert('Error: '+e.message); }
+  btn.disabled=false; btn.textContent='Confirm';
 }
 
-async function deleteItem(id, name) {
-  if (!confirm(`Remove "${name}" from stock?`)) return;
-  try {
-    await sbFetch(`stock_items?id=eq.${id}`, { method:'DELETE', prefer:'return=minimal' });
-    items = items.filter(i => i.id !== id);
-    showToast(`"${name}" removed`);
-    renderAll();
-  } catch(e) { alert('Error: ' + e.message); }
-}
-
-
-// ── Edit item ─────────────────────────────────────────────
-let editItemId = null;
-
+// ── Edit modal ────────────────────────────────────────────
 function openEditModal(itemId) {
-  const item = items.find(i => i.id === itemId);
+  const item = items.find(i=>i.id===itemId);
   if (!item) return;
   editItemId = itemId;
   document.getElementById('e-name').value     = item.name;
-  document.getElementById('e-sku').value      = item.sku;
-  document.getElementById('e-unit').value     = item.unit || 'pcs';
-  document.getElementById('e-minlevel').value = item.min_level || 0;
-  document.getElementById('e-cost').value     = item.cost || 0;
-
-  // Populate category select
+  document.getElementById('e-sku').value      = item.sku||'';
+  document.getElementById('e-unit').value     = item.unit||'pcs';
+  document.getElementById('e-minlevel').value = item.min_level||0;
+  document.getElementById('e-cost').value     = item.cost||0;
   const sel = document.getElementById('e-dept');
-  const allCats = Array.from(new Set([...departments.map(d => d.name), item.category].filter(Boolean))).sort();
-  sel.innerHTML = allCats.map(c => `<option value="${c}" ${c === item.category ? 'selected' : ''}>${c}</option>`).join('');
-
+  const allCats = [...new Set([...departments.map(d=>d.name), item.category].filter(Boolean))].sort();
+  sel.innerHTML = allCats.map(c=>`<option value="${c}"${c===item.category?' selected':''}>${c}</option>`).join('');
   openModal('modal-edit');
-  setTimeout(() => document.getElementById('e-name').focus(), 100);
 }
 
 async function saveEdit() {
   const name     = document.getElementById('e-name').value.trim();
   const sku      = document.getElementById('e-sku').value.trim();
-  const unit     = document.getElementById('e-unit').value.trim() || 'pcs';
-  const minLevel = parseInt(document.getElementById('e-minlevel').value) || 0;
-  const cost     = parseFloat(document.getElementById('e-cost').value) || 0;
+  const unit     = document.getElementById('e-unit').value.trim()||'pcs';
+  const minLevel = parseInt(document.getElementById('e-minlevel').value)||0;
+  const cost     = parseFloat(document.getElementById('e-cost').value)||0;
   const category = document.getElementById('e-dept').value;
-
-  if (!name || !sku) { alert('Name and SKU are required.'); return; }
+  if (!name||!sku) { alert('Name and SKU are required.'); return; }
 
   const btn = document.getElementById('btn-save-edit');
-  btn.disabled = true; btn.textContent = 'Saving…';
-  setSync('saving', 'Saving…');
-
+  btn.disabled=true; btn.textContent='Saving…';
+  setSync('saving','Saving…');
   try {
-    const patch = { name, sku, unit, min_level: minLevel, cost, category };
+    const patch = { name, sku, unit, min_level:minLevel, cost, category };
     await sbFetch(`stock_items?id=eq.${editItemId}`, { method:'PATCH', body:JSON.stringify(patch), prefer:'return=minimal,count=none' });
-    items = items.map(i => i.id === editItemId ? { ...i, ...patch } : i);
+    items = items.map(i => i.id===editItemId ? {...i,...patch} : i);
     closeModal('modal-edit');
     setSync('saved','Saved ✓'); setTimeout(()=>setSync('idle',''),2500);
     showToast(`✓  ${name} updated`);
     renderAll();
-  } catch(e) { alert('Error: ' + e.message); }
-  btn.disabled = false; btn.textContent = 'Save Changes';
+  } catch(e) { alert('Error: '+e.message); }
+  btn.disabled=false; btn.textContent='Save Changes';
 }
 
-// Close modals on backdrop click
-document.querySelectorAll('.modal-backdrop').forEach(b => {
-  b.addEventListener('click', e => { if (e.target === b) b.classList.remove('open'); });
+// ── Delete item ───────────────────────────────────────────
+async function deleteItem(id, name) {
+  if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+  setSync('saving','Saving…');
+  try {
+    await sbFetch(`stock_items?id=eq.${id}`, { method:'DELETE', prefer:'return=minimal' });
+    items = items.filter(i=>i.id!==id);
+    setSync('saved','Saved ✓'); setTimeout(()=>setSync('idle',''),2500);
+    showToast(`✓  ${name} deleted`);
+    renderAll();
+  } catch(e) { alert('Error: '+e.message); }
+}
+
+// ── Departments ───────────────────────────────────────────
+async function addDepartment() {
+  const name = document.getElementById('new-dept-name').value.trim();
+  if (!name) return;
+  setSync('saving','Saving…');
+  try {
+    const [dept] = await sbFetch('departments', { method:'POST', body:JSON.stringify({ id:uid(), name }) });
+    departments = [...departments, dept||{id:uid(),name}].sort((a,b)=>a.name.localeCompare(b.name));
+    document.getElementById('new-dept-name').value = '';
+    closeModal('modal-add-dept');
+    setSync('saved','Saved ✓'); setTimeout(()=>setSync('idle',''),2500);
+    showToast(`✓  Category "${name}" added`);
+    renderAll();
+    renderSettings();
+  } catch(e) { alert('Error: '+e.message); }
+}
+
+async function deleteDepartment(id, name, count) {
+  if (count > 0 && !confirm(`"${name}" has ${count} item${count!==1?'s':''}. Remove category anyway? Items will keep their category label.`)) return;
+  if (count === 0 && !confirm(`Remove category "${name}"?`)) return;
+  setSync('saving','Saving…');
+  try {
+    await sbFetch(`departments?id=eq.${id}`, { method:'DELETE', prefer:'return=minimal' });
+    departments = departments.filter(d=>d.id!==id);
+    setSync('saved','Saved ✓'); setTimeout(()=>setSync('idle',''),2500);
+    showToast(`✓  "${name}" removed`);
+    renderAll();
+    renderSettings();
+  } catch(e) { alert('Error: '+e.message); }
+}
+
+// ── Barcode scanner ───────────────────────────────────────
+let scanStream = null;
+let barcodeDetector = null;
+let scanAnimFrame = null;
+
+async function startScan() {
+  if (!('BarcodeDetector' in window)) {
+    alert('Barcode scanning is not supported on this browser. Try Chrome on Android.'); return;
+  }
+  try {
+    scanStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode:'environment', width:{ideal:1280}, height:{ideal:720} } });
+    const video = document.getElementById('scanner-video');
+    video.srcObject = scanStream;
+    document.getElementById('scanner-overlay').style.display = 'flex';
+    barcodeDetector = new BarcodeDetector({ formats:['qr_code','code_128','code_39','ean_13','ean_8','upc_a','data_matrix','itf'] });
+    scanLoop(video);
+  } catch(e) { alert('Camera error: ' + e.message); }
+}
+
+async function scanLoop(video) {
+  if (!scanStream) return;
+  try {
+    const barcodes = await barcodeDetector.detect(video);
+    if (barcodes.length > 0) {
+      const code = barcodes[0].rawValue;
+      stopScan();
+      handleScanResult(code);
+      return;
+    }
+  } catch {}
+  scanAnimFrame = requestAnimationFrame(() => scanLoop(video));
+}
+
+function stopScan() {
+  if (scanAnimFrame) cancelAnimationFrame(scanAnimFrame);
+  if (scanStream) { scanStream.getTracks().forEach(t=>t.stop()); scanStream=null; }
+  document.getElementById('scanner-overlay').style.display = 'none';
+}
+
+function handleScanResult(code) {
+  const match = items.find(i => i.sku === code || i.sku === code.split(' - ')[0].trim());
+  if (match) {
+    showToast(`📦 Found: ${match.name}`);
+    openAdjustModal(match.id);
+  } else {
+    showToast(`⚠ No item with SKU "${code}"`);
+    document.getElementById('add-sku').value = code;
+    openModal('modal-add');
+  }
+}
+
+// ── Long press on mobile cards for edit ───────────────────
+// (handled by edit button in card itself)
+
+// ── Init ─────────────────────────────────────────────────
+window.addEventListener('resize', () => {
+  const act = document.getElementById('page-activity');
+  if (act.classList.contains('active')) renderActivity();
 });
 
-// Start
 loadData();
 </script>
 </body>
