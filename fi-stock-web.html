@@ -443,25 +443,72 @@ tr:hover td { background: var(--dark-3); }
 
 /* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 768px) {
-  #sidebar     { display: none; }
-  #bottomnav   { display: flex; flex-direction: column; }
-  #scan-fab    { display: flex; }
-  .page        { padding: 14px 14px 8px; }
-  .summary-grid { grid-template-columns: repeat(2,1fr); gap: 8px; margin-bottom: 14px; }
-  .summary-val  { font-size: 18px; }
-  .table-wrap   { display: none; }
-  .item-cards   { display: flex; }
-  #topbar       { padding: 0 14px; }
-  #topbar-title { font-size: 16px; }
+  /* Layout */
+  #sidebar          { display: none; }
+  #bottomnav        { display: flex; flex-direction: column; }
+  #scan-fab         { display: flex; }
+  #add-fab          { display: flex; }
+  #app              { overflow: hidden; max-width: 100vw; }
+
+  /* Topbar — hide add button (use FAB instead) and sync status */
+  #topbar           { padding: 0 14px; height: 48px; }
+  #topbar-title     { font-size: 17px; font-weight: 700; }
+  #topbar-add-btn   { display: none !important; }
+  #sync-status      { display: none; }
+
+  /* Pages */
+  .page             { padding: 12px 12px 0; overflow-x: hidden; }
+
+  /* Summary grid — 2 cols, compact */
+  .summary-grid     { grid-template-columns: repeat(2,1fr); gap: 8px; margin-bottom: 12px; }
+  .summary-card     { padding: 12px; }
+  .summary-val      { font-size: 20px; }
+  .summary-icon     { font-size: 16px; margin-bottom: 4px; }
+  .summary-label    { font-size: 10px; }
+
+  /* Alert banner */
+  .alert-banner     { padding: 12px; }
+  .alert-banner-title { font-size: 13px; }
+  .alert-item       { flex-wrap: wrap; gap: 6px; }
+
+  /* Toolbar */
+  .toolbar          { gap: 8px; margin-bottom: 10px; }
+  .toolbar select   { width: 100%; }
+
+  /* Category chips */
+  .chips-wrap       { margin-bottom: 10px; }
+
+  /* Hide desktop table, show cards */
+  .table-wrap       { display: none; }
+  .item-cards       { display: flex; }
+
+  /* Item cards — prevent overflow */
+  .item-card        { padding: 12px; gap: 8px; }
+  .item-card-name   { font-size: 13px; }
+  .item-card-qty    { font-size: 18px; }
+
+  /* Modals */
+  .modal            { max-height: 95dvh; }
+  .modal-body       { padding: 14px 16px 16px; }
+  .field input, .field select { font-size: 16px; } /* prevents iOS zoom */
+  
+  /* Qty stepper */
+  .qty-display      { font-size: 48px; }
+  .big-btn          { width: 56px; height: 56px; font-size: 26px; }
+
+  /* Toast above bottom nav */
+  #toast            { bottom: calc(var(--bottomnav-h) + 12px + var(--safe-bottom)); }
 }
+
 @media (min-width: 769px) {
-  .modal { border-radius: 16px; margin: auto; }
-  .modal-backdrop { align-items: center; }
-  #toast { bottom: 20px; }
+  .modal            { border-radius: 16px; margin: auto; }
+  .modal-backdrop   { align-items: center; }
+  #toast            { bottom: 20px; }
+  #scan-fab         { display: none; }
 }
+
 @media (min-width: 1100px) {
-  --sidebar-w: 240px;
-  .summary-grid { grid-template-columns: repeat(4,1fr); }
+  .summary-grid     { grid-template-columns: repeat(4,1fr); }
 }
 </style>
 <meta name="theme-color" content="#0e1114"/>
@@ -643,7 +690,14 @@ tr:hover td { background: var(--dark-3); }
 </div><!-- /app -->
 
 <!-- Scan FAB -->
-<button id="scan-fab" onclick="startScan()" title="Scan barcode">⊡</button>
+<button id="scan-fab" onclick="startScan()" title="Scan barcode" style="right:80px;">⊡</button>
+
+<!-- Add Item FAB (mobile only) -->
+<button id="add-fab" onclick="openModal('modal-add')" title="Add item"
+  style="position:fixed;right:16px;bottom:calc(var(--bottomnav-h)+16px+var(--safe-bottom));
+  width:52px;height:52px;border-radius:50%;background:var(--teal);border:none;cursor:pointer;
+  font-size:24px;color:#fff;box-shadow:0 4px 20px #00A89D55;
+  display:none;align-items:center;justify-content:center;z-index:100;">+</button>
 
 <!-- Scanner overlay -->
 <div id="scanner-overlay">
